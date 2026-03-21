@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Privacy Policy – ColorFit AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:linear-gradient(135deg,#1e1b4b,#3730A3,#4F46E5,#7C3AED,#9333EA);background-size:400% 400%;animation:bgShift 8s ease infinite;min-height:100vh;padding:28px 14px 60px}
+@keyframes bgShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.wrap{max-width:720px;margin:0 auto}
+
+/* TOPBAR */
+.topbar{text-align:center;margin-bottom:20px}
+.lpill{
+  display:inline-flex;align-items:center;gap:10px;
+  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.28);
+  border-radius:50px;padding:6px 18px 6px 6px;color:#fff;
+  backdrop-filter:blur(16px);text-decoration:none;
+}
+.logo-circle{
+  width:36px;height:36px;border-radius:50%;
+  background:linear-gradient(135deg,#1E1B4B,#0F0A2A);
+  border:2px solid rgba(129,140,248,.5);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;flex-shrink:0;
+}
+.lpill b{font-family:'Syne',sans-serif;font-size:15px}
+
+/* CARD */
+.card{background:#fff;border-radius:24px;box-shadow:0 28px 70px rgba(49,46,129,.28);overflow:hidden}
+.ch{padding:32px 40px 24px;background:linear-gradient(135deg,rgba(79,70,229,.05),rgba(147,51,234,.04));border-bottom:1px solid rgba(79,70,229,.12)}
+.ch h1{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;letter-spacing:-1px;background:linear-gradient(135deg,#4F46E5,#9333EA);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.ch p{color:#5B5480;font-size:14px;margin-top:4px}
+.cb{padding:32px 40px 40px}
+
+/* BADGES */
+.dbadge{display:inline-flex;align-items:center;gap:6px;background:#F3F4FF;border:1.5px solid rgba(79,70,229,.15);border-radius:20px;padding:5px 12px;font-size:12px;font-weight:600;color:#4F46E5;margin-bottom:6px}
+.nbadge{display:inline-flex;align-items:center;gap:6px;background:#ECFDF5;border:1.5px solid #A7F3D0;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:600;color:#065F46;margin-bottom:20px}
+
+/* SECTIONS */
+.sec{margin-bottom:26px}
+.sec h2{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:#0D0A1E;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.ico{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,#4F46E5,#9333EA);display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.ico.green{background:linear-gradient(135deg,#059669,#10B981)}
+.ico.pink{background:linear-gradient(135deg,#DB2777,#9333EA)}
+.ico.blue{background:linear-gradient(135deg,#2563EB,#06B6D4)}
+.ico.orange{background:linear-gradient(135deg,#D97706,#F59E0B)}
+.sec p{color:#4B4566;font-size:14px;line-height:1.75}
+.sec ul{margin-top:8px;padding-left:0;list-style:none}
+.sec ul li{color:#4B4566;font-size:13.5px;line-height:1.75;padding:3px 0 3px 18px;position:relative}
+.sec ul li::before{content:'→';position:absolute;left:2px;color:#4F46E5;font-size:11px;top:5px}
+.divl{height:1px;background:rgba(79,70,229,.1);margin:22px 0}
+
+/* INFO BOXES */
+.hbox{background:#F3F4FF;border:1.5px solid rgba(79,70,229,.18);border-radius:12px;padding:13px 16px;margin-top:10px}
+.hbox p{color:#3730A3;font-size:13px;line-height:1.7;font-weight:500}
+.gbox{background:#ECFDF5;border:1.5px solid #A7F3D0;border-radius:12px;padding:13px 16px;margin-top:10px}
+.gbox p{color:#065F46;font-size:13px;line-height:1.7;font-weight:500}
+.ybox{background:#FFFBEB;border:1.5px solid #FDE68A;border-radius:12px;padding:13px 16px;margin-top:10px}
+.ybox p{color:#92400E;font-size:13px;line-height:1.7;font-weight:500}
+
+/* NEW FEATURE TAG */
+.new-tag{background:#10B981;color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;letter-spacing:.5px;margin-left:6px;vertical-align:middle}
+
+/* LINKS & BUTTONS */
+.ext{color:#4F46E5;font-weight:600;text-decoration:none}
+.ext:hover{text-decoration:underline}
+.back{display:inline-flex;align-items:center;gap:6px;margin-top:24px;padding:11px 24px;background:linear-gradient(135deg,#4F46E5,#7C3AED);color:#fff;border-radius:12px;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;text-decoration:none;transition:all .25s}
+.back:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(79,70,229,.4)}
+.cbox{background:linear-gradient(135deg,rgba(79,70,229,.05),rgba(147,51,234,.04));border:1.5px solid rgba(79,70,229,.15);border-radius:13px;padding:16px 20px;margin-top:10px}
+.cbox p{color:#4B4566;font-size:14px;line-height:1.75;margin-top:6px}
+.foot{text-align:center;margin-top:18px;color:rgba(255,255,255,.5);font-size:12px}
+
+@media(max-width:520px){
+  .ch,.cb{padding-left:18px;padding-right:18px}
+  .ch h1{font-size:22px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <a href="index.html" class="lpill">
+      <div class="logo-circle">
+        <svg width="32" height="32" viewBox="0 0 300 300">
+          <defs>
+            <radialGradient id="pb" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#1E1B4B"/><stop offset="100%" stop-color="#0F0A2A"/></radialGradient>
+            <linearGradient id="pp1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#C4B5FD"/><stop offset="100%" stop-color="#7C3AED"/></linearGradient>
+            <linearGradient id="pp2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#DDD6FE"/><stop offset="100%" stop-color="#8B5CF6"/></linearGradient>
+            <linearGradient id="pp3" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#6D28D9"/><stop offset="100%" stop-color="#A78BFA"/></linearGradient>
+            <linearGradient id="pcg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#D97706"/></linearGradient>
+            <linearGradient id="pbrd" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#818CF8"/><stop offset="100%" stop-color="#4F46E5"/></linearGradient>
+            <filter id="pgf"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <clipPath id="pcc"><circle cx="150" cy="150" r="143"/></clipPath>
+          </defs>
+          <circle cx="150" cy="150" r="146" fill="none" stroke="url(#pbrd)" stroke-width="6"/>
+          <circle cx="150" cy="150" r="143" fill="url(#pb)"/>
+          <path d="M96 228 Q108 213 150 213 Q192 213 204 228 Q192 240 150 243 Q108 240 96 228Z" fill="#166534" opacity=".7" clip-path="url(#pcc)"/>
+          <path d="M150 206 Q126 172 130 134 Q137 107 150 100 Q163 107 170 134 Q174 172 150 206Z" fill="#5B21B6" opacity=".5" transform="rotate(-72 150 206)" clip-path="url(#pcc)"/>
+          <path d="M150 206 Q126 172 130 134 Q137 107 150 100 Q163 107 170 134 Q174 172 150 206Z" fill="#5B21B6" opacity=".5" transform="rotate(72 150 206)" clip-path="url(#pcc)"/>
+          <path d="M150 202 Q123 165 128 126 Q136 97 150 90 Q164 97 172 126 Q177 165 150 202Z" fill="url(#pp3)" opacity=".72" transform="rotate(-50 150 202)" clip-path="url(#pcc)"/>
+          <path d="M150 202 Q123 165 128 126 Q136 97 150 90 Q164 97 172 126 Q177 165 150 202Z" fill="url(#pp3)" opacity=".72" transform="rotate(50 150 202)" clip-path="url(#pcc)"/>
+          <path d="M150 200 Q120 162 126 120 Q135 90 150 83 Q165 90 174 120 Q180 162 150 200Z" fill="url(#pp1)" opacity=".9" transform="rotate(-30 150 200)" clip-path="url(#pcc)"/>
+          <path d="M150 200 Q120 162 126 120 Q135 90 150 83 Q165 90 174 120 Q180 162 150 200Z" fill="url(#pp1)" opacity=".9" transform="rotate(30 150 200)" clip-path="url(#pcc)"/>
+          <path d="M150 198 Q122 158 128 114 Q137 84 150 77 Q163 84 172 114 Q178 158 150 198Z" fill="url(#pp2)" filter="url(#pgf)" clip-path="url(#pcc)"/>
+          <circle cx="150" cy="172" r="26" fill="url(#pcg)" filter="url(#pgf)"/>
+          <circle cx="150" cy="172" r="18" fill="#FBBF24"/>
+          <circle cx="150" cy="172" r="11" fill="#FDE68A"/>
+          <circle cx="150" cy="172" r="4" fill="#92400E"/>
+        </svg>
+      </div>
+      <b>ColorFit AI</b>
+    </a>
+  </div>
+
+  <div class="card">
+    <div class="ch">
+      <h1>Privacy Policy</h1>
+      <p>How ColorFit AI collects, uses and protects your information</p>
+    </div>
+    <div class="cb">
+
+      <div class="dbadge">Last Updated: March 2025</div><br/>
+      <div class="nbadge">Updated with new AI features</div>
+
+      <!-- INTRO -->
+      <div class="sec">
+        <p>Welcome to <strong>ColorFit AI</strong> — your smart personal stylist. This Privacy Policy explains how we handle your information when you use our app at <a class="ext" href="https://colourfitai.vercel.app">colourfitai.vercel.app</a>. By using our app, you agree to this policy.</p>
+      </div>
+
+      <div class="divl"></div>
+
+      <!-- 1. DATA WE COLLECT -->
+      <div class="sec">
+        <h2><span class="ico">1</span> Information We Process</h2>
+        <p>ColorFit AI processes the following data <strong>locally in your browser</strong> to provide style suggestions:</p>
+        <ul>
+          <li>Age, height, weight and gender — for body type analysis</li>
+          <li>Skin tone HEX color code — optional, for color palette matching</li>
+          <li>Occasion preference — for outfit selection</li>
+          <li><strong>Camera / Photo</strong> <span class="new-tag">NEW</span> — used only to detect skin tone, processed instantly in your browser, never uploaded to any server</li>
+          <li><strong>AI Chat messages</strong> <span class="new-tag">NEW</span> — your style questions sent to Claude AI API for responses</li>
+        </ul>
+        <div class="hbox">
+          <p>All body measurements and skin tone data are processed only in your browser. They are never stored, transmitted or saved anywhere outside your device.</p>
+        </div>
+      </div>
+
+      <div class="divl"></div>
+
+      <!-- 2. CAMERA -->
+      <div class="sec">
+        <h2><span class="ico pink">2</span> Camera & Photo Access <span class="new-tag">NEW</span></h2>
+        <p>ColorFit AI can access your camera or photo gallery — but only when you choose to use the skin tone detection feature.</p>
+        <ul>
+          <li>Camera is accessed only when you tap "Open Camera" button</li>
+          <li>Photos are processed instantly in your browser using JavaScript Canvas API</li>
+          <li>No images or photos are ever uploaded to our servers</li>
+          <li>No photos are stored or saved anywhere</li>
+          <li>Camera access stops immediately when you capture or close</li>
+          <li>You can skip camera access entirely and enter skin tone manually</li>
+        </ul>
+        <div class="gbox">
+          <p>Your camera and photos stay 100% private. We only read the average color from the center of the image to detect skin tone — nothing else.</p>
+        </div>
+      </div>
+
+      <div class="divl"></div>
+
+      <!-- 3. AI CHAT -->
+      <div class="sec">
+        <h2><span class="ico blue">3</span> AI Chat (Claude AI) <span class="new-tag">NEW</span></h2>
+        <p>ColorFit AI uses <strong>Claude AI by Anthropic</strong> to power the AI Style Advice and AI Chat features.</p>
+        <ul>
+          <li>When you use AI Chat or get AI style advice, your profile data and messages are sent to Anthropic's Claude API</li>
+          <li>This includes: gender, age, body type, skin tone type, occasion and your chat messages</li>
+          <li>Anthropic processes this data to generate style responses</li>
+          <li>Chat history is stored only in your current browser session — it clears when you close the tab</li>
+          <li>We do not permanently store your chat messages</li>
+        </ul>
+        <div class="ybox">
+          <p>By using AI Chat, your style questions are processed by Anthropic (Claude AI). Please review Anthropic's Privacy Policy at <a class="ext" href="https://www.anthropic.com/privacy" target="_blank">anthropic.com/privacy</a></p>
+        </div>
+      </div>
+
+      <div class="divl"></div>
+
+      <!-- 4. PWA -->
+      <div class="sec">
+        <h2><span class="ico orange">4</span> App Installation (PWA) <span class="new-tag">NEW</span></h2>
+        <p>ColorFit AI is a Progressive Web App (PWA) that can be installed on your device like a native app.</p>
+        <ul>
+          <li>When installed, a service worker caches basic app files for offline use</li>
+          <li>Cached data includes only app code — no personal data is cached</li>
+          <li>Dark mode preference is saved to your browser's localStorage</li>
+          <li>You can uninstall the app anytime from your device settings</li>
+          <li>Clearing browser data removes all cached app files</li>
+        </ul>
+      </div>
+
+      <div class="divl"></div>
+
+      <!-- 5. GOOGLE ADSENSE -->
+      <div class="sec">
+        <h2><span class="ico">5</span> Google AdSense & Cookies</h2>
+        <p>Our website uses <strong>Google AdSense</strong> to display advertisements. Google may use cookies to serve personalized ads.</p>
+        <ul>
+          <li>Google may use the DoubleClick cookie to serve relevant ads</li>
+          <li>Third-party vendors may use cookies based on your prior visits</li>
+          <li>Opt out of personalized ads at <a class="ext" href="https://www.google.com/settings/ads" target="_blank">Google Ad Settings</a></li>
+          <li>Google Privacy Policy: <a class="ext" href="https://policies.google.com/privacy" target="_blank">policies.google.com/privacy</a></li>
+        </ul>
+      </div>
+
+      <div class="divl"></div>
+
+      <!-- 6. THIRD PARTY -->
+      <div class="sec">
+        <h2><span class="ico">6</span> Third-Party Services</h2>
+        <p>ColorFit AI uses these third-party services, each with their own privacy policies:</p>
+        <ul>
+          <li><strong>Anthropic (Claude AI)</strong> — AI style advice and chat responses</li>
+          <li><strong>Unsplash</strong> — Fashion outfit images loaded from Unsplash CDN</li>
+          <li><strong>Google Fonts</strong> — Syne and DM Sans typography</li>
+          <li><strong>Google AdSense</strong> — Advertisements</li>
+          <li><strong>Vercel</strong> — Website hosting and deployment</li>
+          <li><strong>GitHub</strong> — Code repository and backup hosting</li>
+        </ul>
+      </div>
+
+      <div class="divl"></div>
+
+      <!-- 7. DATA STORAGE -->
+      <div class="sec">
+        <h2><span class="ico green">7</span> Data Storage & Security</h2>
+        <p>ColorFit AI has no backend server or database of its own. Here is what gets stored where:</p>
+        <ul>
+          <li><strong>Your device only:</strong> Dark mode preference (localStorage)</li>
+          <li><strong>Browser session only:</strong> AI chat history (clears on tab close)</li>
+          <li><strong>Never stored anywhere:</strong> Your photos, camera images, body measurements</li>
+          <li><strong>Anthropic servers:</strong> AI chat messages (processed and not retained per their policy)</li>
+        </ul>
+        <div class="hbox">
+          <p>No accounts. No sign-ups. No databases. Your personal style data never leaves your device.</p>
+        </div>
+      </div>
+
+      <div class="divl"></div>
+
+      <!-- 8. CHILDREN -->
+      <div class="sec">
+        <h2><span class="ico">8</span> Children's Privacy</h2>
+        <p>ColorFit AI is not directed to children under the age of 13. We do not knowingly collect personal information from children. If you believe a child is using our app, please contact us.</p>
+      </div>
+
+      <div class="divl"></div>
+
+      <!-- 9. YOUR RIGHTS -->
+      <div class="sec">
+        <h2><span class="ico">9</span> Your Rights & Controls</h2>
+        <ul>
+          <li>Opt out of Google ads via <a class="ext" href="https://www.google.com/settings/ads" target="_blank">Ad Settings</a></li>
+          <li>Clear browser data to remove all cached app files</li>
+          <li>Deny camera access in your browser settings</li>
+          <li>Skip AI features entirely — app works without AI chat</li>
+          <li>Use private/incognito mode for full privacy</li>
+          <li>Uninstall the PWA anytime from device settings</li>
+        </ul>
+      </div>
+
+      <div class="divl"></div>
+
+      <!-- 10. CHANGES -->
+      <div class="sec">
+        <h2><span class="ico">10</span> Changes to This Policy</h2>
+        <p>We update this Privacy Policy when new features are added. The "Last Updated" date at the top reflects the latest changes. We encourage you to review this page periodically.</p>
+      </div>
+
+      <div class="divl"></div>
+
+      <!-- 11. CONTACT -->
+      <div class="sec">
+        <h2><span class="ico">11</span> Contact Us</h2>
+        <p>Questions about this Privacy Policy? Contact us:</p>
+        <div class="cbox">
+          <p><strong>App:</strong> <a class="ext" href="https://colourfitai.vercel.app">colourfitai.vercel.app</a></p>
+          <p><strong>Email:</strong> colorfit.ai.official@gmail.com</p>
+          <p><strong>GitHub:</strong> <a class="ext" href="https://github.com/colourfit" target="_blank">github.com/colourfit</a></p>
+        </div>
+      </div>
+
+      <a href="index.html" class="back">Back to ColorFit AI</a>
+
+    </div>
+  </div>
+
+  <div class="foot">2025 ColorFit AI · All rights reserved · Lotus Edition</div>
+</div>
+</body>
+</html>
