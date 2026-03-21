@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ColorFit AI – Smart Personal Stylist</title>
+<meta name="description" content="AI-powered personal stylist with skin detection, outfit picks and style chat."/>
+<link rel="manifest" href="manifest.json"/>
+<meta name="theme-color" content="#4F46E5"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-title" content="ColorFit AI"/>
+<link rel="apple-touch-icon" href="icon-192.png"/>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9532389144445802" crossorigin="anonymous"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--ink:#0D0A1E;--mid:#5B5480;--soft:#9A94BB;--line:rgba(79,70,229,.13);--card:#fff;--ibg:#FAFBFF;--iborder:rgba(79,70,229,.13);--tbg:#F7F6FF;--abg:#F3F4FF}
+
+/* ══ BODY & BACKGROUND ══ */
+body{
+  min-height:100vh;font-family:'DM Sans',sans-serif;
+  background:linear-gradient(135deg,#1e1b4b 0%,#3730A3 25%,#4F46E5 50%,#7C3AED 75%,#9333EA 100%);
+  background-size:400% 400%;
+  animation:bgShift 8s ease infinite;
+  display:flex;justify-content:center;
+  padding:24px 14px 70px;
+  overflow-x:hidden;
+  transition:background 1s;
+}
+@keyframes bgShift{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+/* DARK MODE */
+body.dark{
+  background:linear-gradient(135deg,#030014,#0F0C1D,#1A1040,#220D40)!important;
+  background-size:400% 400%!important;
+  --ink:#F0EEFF;--mid:#A89DC8;--soft:#6B5F90;
+  --line:rgba(139,127,255,.18);--card:#1A1730;
+  --ibg:#231F3A;--iborder:rgba(139,127,255,.25);
+  --tbg:#1A1635;--abg:#2A2550;
+}
+body.dark .card{background:var(--card)}
+body.dark .ch{background:rgba(79,70,229,.12)!important}
+body.dark .ch p,body.dark .lb,body.dark .hint{color:var(--soft)}
+body.dark .inp,body.dark .sel{background:var(--ibg);color:var(--ink);border-color:var(--iborder)}
+body.dark .inp::placeholder{color:#4A4266}
+body.dark .gtog{background:var(--tbg);border-color:var(--iborder)}
+body.dark .gb{color:var(--mid);background:transparent}
+body.dark .gb.on{background:linear-gradient(135deg,#4F46E5,#7C3AED)!important;color:#fff!important}
+body.dark .rh h2,body.dark .st{color:var(--ink)}
+body.dark .rh small,body.dark .oinfo p{color:var(--mid)}
+body.dark .ocard{background:var(--ibg);border-color:var(--iborder)}
+body.dark .oinfo h4{color:var(--ink)}
+body.dark .oinfo{border-color:rgba(139,127,255,.1)}
+body.dark .bact,body.dark .bgo{background:var(--abg);color:var(--mid);border-color:var(--iborder)}
+body.dark .avchip{background:#3A1A1A;color:#FCA5A5;border-color:#7F1D1D}
+body.dark .ptag{background:var(--abg);color:var(--mid);border-color:var(--iborder)}
+body.dark .divl{background:var(--iborder)}
+body.dark .shimmer{background:#2A2550;color:var(--soft)}
+body.dark .arow{border-color:var(--iborder)}
+body.dark .chat-box{background:var(--ibg);border-color:var(--iborder)}
+body.dark .chat-inp{background:var(--tbg);color:var(--ink);border-color:var(--iborder)}
+body.dark .chat-inp::placeholder{color:#4A4266}
+body.dark .msg-ai{background:var(--abg);color:var(--ink)}
+body.dark .tab-btn{color:var(--mid)}
+body.dark .tab-btn.on{color:#4F46E5;border-color:#4F46E5}
+body.dark .cam-box{background:var(--ibg);border-color:var(--iborder)}
+body.dark .cam-box h3{color:var(--ink)}
+body.dark .ai-box{background:rgba(79,70,229,.1);border-color:rgba(139,127,255,.2)}
+body.dark .ai-title{color:var(--ink)}
+body.dark .ai-text{color:var(--mid)}
+body.dark .sugg{background:var(--tbg);color:var(--mid);border-color:var(--iborder)}
+body.dark .modal{background:var(--card)}
+body.dark .modal h3,body.dark .sbtn-item{color:var(--ink)}
+body.dark .sbtn-item{background:var(--tbg);border-color:var(--iborder)}
+body.dark .clinp{background:var(--ibg);color:var(--mid);border-color:var(--iborder)}
+
+/* ══ PARTICLES ══ */
+#particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.particle{
+  position:absolute;border-radius:50%;
+  background:rgba(255,255,255,0.15);
+  animation:float linear infinite;
+}
+@keyframes float{
+  0%{transform:translateY(100vh) rotate(0deg);opacity:0}
+  10%{opacity:1}
+  90%{opacity:.6}
+  100%{transform:translateY(-100px) rotate(720deg);opacity:0}
+}
+
+/* ══ WRAP ══ */
+.wrap{width:100%;max-width:700px;position:relative;z-index:1}
+
+/* ══ TOPBAR ══ */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:20px;gap:10px;
+  animation:slideDown .6s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes slideDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+
+.lpill{
+  display:inline-flex;align-items:center;gap:10px;
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.25);
+  border-radius:50px;padding:6px 18px 6px 6px;color:#fff;
+  backdrop-filter:blur(16px);
+  box-shadow:0 4px 20px rgba(0,0,0,.15);
+  animation:pulse-glow 3s ease-in-out infinite;
+}
+@keyframes pulse-glow{
+  0%,100%{box-shadow:0 4px 20px rgba(79,70,229,.2)}
+  50%{box-shadow:0 4px 30px rgba(147,51,234,.5)}
+}
+/* Lotus logo circle in topbar */
+.logo-circle{
+  width:38px;height:38px;border-radius:50%;
+  background:linear-gradient(135deg,#1E1B4B,#0F0A2A);
+  border:2px solid rgba(129,140,248,.5);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;overflow:hidden;
+  box-shadow:0 2px 12px rgba(124,58,237,.4);
+  animation:logoSpin 0s;
+  transition:transform .3s;
+}
+.logo-circle:hover{transform:rotate(15deg) scale(1.1)}
+.lpill b{font-family:'Syne',sans-serif;font-size:15px;letter-spacing:-.3px}
+.ai-badge{
+  background:linear-gradient(135deg,rgba(255,255,255,.25),rgba(255,255,255,.12));
+  border:1px solid rgba(255,255,255,.3);
+  border-radius:20px;padding:3px 8px;color:#fff;
+  font-size:10px;font-weight:700;margin-left:2px;
+  animation:sparkle 2s ease-in-out infinite;
+}
+@keyframes sparkle{0%,100%{opacity:1}50%{opacity:.7}}
+.dmbtn{
+  background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);
+  border-radius:50px;padding:8px 16px;color:#fff;cursor:pointer;
+  font-size:13px;font-weight:500;font-family:'DM Sans',sans-serif;
+  transition:all .3s;backdrop-filter:blur(16px);
+  box-shadow:0 4px 15px rgba(0,0,0,.1);
+}
+.dmbtn:hover{background:rgba(255,255,255,.28);transform:scale(1.05)}
+
+/* ══ CARD ══ */
+.card{
+  background:var(--card);border-radius:26px;
+  box-shadow:0 32px 80px rgba(49,46,129,.3),0 0 0 1px rgba(255,255,255,.1) inset;
+  overflow:hidden;transition:background .4s,box-shadow .4s;
+  animation:cardRise .8s cubic-bezier(.22,1,.36,1) both;
+  animation-delay:.1s;
+}
+@keyframes cardRise{from{opacity:0;transform:translateY(40px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+.ch{
+  padding:30px 36px 24px;
+  background:linear-gradient(135deg,rgba(79,70,229,.06),rgba(147,51,234,.05));
+  border-bottom:1px solid var(--line);
+  position:relative;overflow:hidden;
+}
+.ch::before{
+  content:'';position:absolute;top:-50%;right:-20%;
+  width:200px;height:200px;
+  background:radial-gradient(circle,rgba(147,51,234,.1),transparent 70%);
+  animation:rotate 10s linear infinite;
+}
+@keyframes rotate{to{transform:rotate(360deg)}}
+.ch h1{
+  font-family:'Syne',sans-serif;font-size:25px;font-weight:800;
+  letter-spacing:-1px;
+  background:linear-gradient(135deg,#4F46E5,#7C3AED,#9333EA);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  background-size:200% 200%;
+  animation:gradientMove 3s ease infinite;
+}
+@keyframes gradientMove{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.ch p{color:var(--mid);font-size:13px;margin-top:5px}
+.cb{padding:22px 36px 32px}
+
+/* ══ STEPS ══ */
+.step{display:none}
+.step.on{display:block;animation:stepIn .5s cubic-bezier(.22,1,.36,1) both}
+@keyframes stepIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ══ FORM ══ */
+.fg{margin-bottom:16px}
+.lb{display:block;font-size:11px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--soft);margin-bottom:7px;transition:color .3s}
+.gtog{
+  display:flex;border:2px solid var(--line);border-radius:13px;
+  overflow:hidden;background:var(--tbg);transition:all .3s;
+}
+.gb{
+  flex:1;padding:13px 8px;border:none;background:transparent;cursor:pointer;
+  font-family:'DM Sans',sans-serif;font-size:14px;color:var(--mid);
+  transition:all .3s;display:flex;align-items:center;justify-content:center;gap:6px;
+  font-weight:500;position:relative;overflow:hidden;
+}
+.gb::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.2),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.gb.on{
+  background:linear-gradient(135deg,#4F46E5,#7C3AED);
+  color:#fff;font-weight:600;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2);
+}
+.gb.on::after{opacity:1}
+.gb:hover:not(.on){background:rgba(79,70,229,.08);color:#4F46E5}
+
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.inp,.sel{
+  width:100%;padding:12px 14px;
+  border:2px solid var(--iborder);border-radius:11px;
+  font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);
+  background:var(--ibg);outline:none;
+  transition:all .3s;-webkit-appearance:none;appearance:none;
+}
+.inp:focus,.sel:focus{
+  border-color:#4F46E5;
+  box-shadow:0 0 0 4px rgba(79,70,229,.1);
+  background:#fff;
+  transform:translateY(-1px);
+}
+body.dark .inp:focus,body.dark .sel:focus{background:var(--ibg)}
+.inp::placeholder{color:var(--soft)}
+.selw{position:relative}.selw::after{content:'▾';position:absolute;right:13px;top:50%;transform:translateY(-50%);color:var(--soft);pointer-events:none;font-size:13px}
+.hxr{position:relative}
+.hxd{
+  position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  width:26px;height:26px;border-radius:7px;
+  border:2px solid rgba(0,0,0,.08);background:#D2A679;
+  transition:all .3s;cursor:pointer;
+}
+.hxd:hover{transform:translateY(-50%) scale(1.1)}
+.hxr .inp{padding-right:46px}
+.err{display:none;color:#EF4444;font-size:12px;margin-top:4px;font-weight:500;animation:shake .3s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.hint{font-size:12px;color:var(--soft);margin-top:3px}
+
+/* MAIN BUTTON */
+.bmain{
+  width:100%;padding:14px;border:none;border-radius:13px;
+  background:linear-gradient(135deg,#4F46E5 0%,#7C3AED 50%,#9333EA 100%);
+  background-size:200% 200%;
+  color:#fff;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;
+  cursor:pointer;margin-top:6px;
+  transition:all .3s;position:relative;overflow:hidden;
+  animation:gradientMove 3s ease infinite;
+  box-shadow:0 4px 20px rgba(79,70,229,.35);
+}
+.bmain::before{
+  content:'';position:absolute;top:0;left:-100%;
+  width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);
+  transition:left .5s;
+}
+.bmain:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(79,70,229,.5)}
+.bmain:hover::before{left:100%}
+.bmain:active{transform:translateY(0)}
+
+/* ══ SKIN TONE BOX ══ */
+.cam-box{
+  border:2px dashed var(--iborder);border-radius:16px;
+  padding:20px;text-align:center;margin-bottom:18px;
+  background:var(--ibg);transition:all .3s;
+  animation:stepIn .5s ease both;
+}
+.cam-box:hover{border-color:#4F46E5;box-shadow:0 4px 20px rgba(79,70,229,.1)}
+.cam-box h3{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--ink);margin-bottom:5px}
+.cam-box p{font-size:12px;color:var(--soft);margin-bottom:14px}
+.cam-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:16px}
+.cam-btn{
+  padding:9px 16px;border:2px solid var(--iborder);border-radius:10px;
+  background:var(--tbg);color:var(--mid);font-family:'DM Sans',sans-serif;
+  font-size:12.5px;font-weight:500;cursor:pointer;
+  transition:all .25s;
+}
+.cam-btn:hover{border-color:#4F46E5;color:#4F46E5;transform:translateY(-2px)}
+.cam-btn.pr{
+  background:linear-gradient(135deg,#4F46E5,#7C3AED);
+  color:#fff;border:none;
+  box-shadow:0 4px 15px rgba(79,70,229,.35);
+}
+.cam-btn.pr:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(79,70,229,.5)}
+
+/* Skin circles */
+.skin-circles{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:4px}
+.sc{
+  width:38px;height:38px;border-radius:50%;cursor:pointer;
+  border:3px solid transparent;transition:all .25s;
+  box-shadow:0 3px 10px rgba(0,0,0,.2);
+  position:relative;
+}
+.sc:hover{transform:scale(1.2);box-shadow:0 5px 16px rgba(0,0,0,.3)}
+.sc.active{border-color:#4F46E5;transform:scale(1.15)}
+.sc-label{font-size:9px;color:var(--soft);text-align:center;margin-top:4px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:38px}
+
+.det-color{
+  display:none;align-items:center;gap:10px;
+  margin-top:12px;padding:10px 14px;
+  background:linear-gradient(135deg,rgba(79,70,229,.08),rgba(147,51,234,.06));
+  border:1.5px solid rgba(79,70,229,.2);border-radius:10px;
+  font-size:13px;font-weight:500;color:var(--ink);
+  animation:stepIn .4s ease both;
+}
+.dc-box{width:32px;height:32px;border-radius:8px;border:2px solid rgba(0,0,0,.1);flex-shrink:0;transition:background .3s}
+
+/* Camera area */
+#camArea{display:none;margin-top:12px;animation:stepIn .4s ease}
+#camVid{width:100%;max-height:200px;border-radius:12px;object-fit:cover;background:#1A1A2E;display:block;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+
+/* ══ LOADING ══ */
+.ld{display:none;text-align:center;padding:50px 20px}.ld.on{display:block}
+.sp-wrap{position:relative;width:60px;height:60px;margin:0 auto 20px}
+.sp{
+  width:60px;height:60px;
+  border:4px solid rgba(79,70,229,.15);
+  border-top-color:#4F46E5;border-radius:50%;
+  animation:spin .8s linear infinite;
+}
+.sp-inner{
+  position:absolute;top:8px;left:8px;right:8px;bottom:8px;
+  border:3px solid rgba(147,51,234,.15);
+  border-bottom-color:#9333EA;border-radius:50%;
+  animation:spin .6s linear infinite reverse;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ld p{color:var(--mid);font-size:14px;animation:blink 1.5s ease-in-out infinite}
+.ld-dots{display:flex;justify-content:center;gap:6px;margin-top:12px}
+.ld-dot{width:8px;height:8px;border-radius:50%;background:#4F46E5;animation:bounce .8s ease-in-out infinite}
+.ld-dot:nth-child(2){animation-delay:.15s;background:#7C3AED}
+.ld-dot:nth-child(3){animation-delay:.3s;background:#9333EA}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ══ TABS ══ */
+.tabs{display:flex;border-bottom:2px solid var(--line);margin-bottom:20px}
+.tab-btn{
+  flex:1;padding:11px 6px;border:none;background:transparent;cursor:pointer;
+  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;
+  color:var(--soft);border-bottom:2px solid transparent;margin-bottom:-2px;
+  transition:all .25s;
+}
+.tab-btn.on{color:#4F46E5;border-color:#4F46E5;font-weight:600}
+.tab-btn:hover:not(.on){color:var(--mid)}
+
+/* ══ RESULTS ══ */
+.rh{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+.rh h2{
+  font-family:'Syne',sans-serif;font-size:19px;font-weight:700;color:var(--ink);
+  animation:slideRight .4s ease both;
+}
+@keyframes slideRight{from{opacity:0;transform:translateX(-15px)}to{opacity:1;transform:translateX(0)}}
+.rh small{font-size:12px;color:var(--soft);display:block;margin-top:2px}
+.bgo{
+  padding:8px 14px;border:2px solid var(--line);border-radius:9px;
+  background:transparent;color:var(--mid);font-family:'DM Sans',sans-serif;
+  font-size:13px;cursor:pointer;transition:all .25s;font-weight:500;
+}
+.bgo:hover{border-color:#4F46E5;color:#4F46E5;transform:translateX(-2px)}
+
+.sbadge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 14px;border-radius:50px;font-weight:600;font-size:12.5px;
+  border:2px solid;margin-bottom:12px;
+  animation:popIn .4s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes popIn{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
+
+.pstrip{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.ptag{
+  display:flex;align-items:center;gap:4px;padding:5px 11px;
+  background:var(--abg);border:1.5px solid var(--iborder);
+  border-radius:20px;font-size:11px;font-weight:600;color:#4F46E5;
+  animation:popIn .4s ease both;transition:all .2s;
+}
+.ptag:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(79,70,229,.15)}
+
+.st{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--ink);margin-bottom:11px;display:flex;align-items:center;gap:6px}
+.cnt{background:linear-gradient(135deg,#4F46E5,#9333EA);color:#fff;font-size:10px;padding:2px 7px;border-radius:20px;font-weight:700}
+
+/* ══ PALETTE ══ */
+.psec{margin-bottom:22px}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(38px,1fr));gap:6px}
+.swatch{
+  aspect-ratio:1;border-radius:9px;border:2px solid rgba(0,0,0,.06);
+  cursor:pointer;position:relative;
+  transition:transform .2s,box-shadow .2s;
+}
+.swatch:hover{transform:scale(1.25) translateY(-4px);box-shadow:0 8px 20px rgba(0,0,0,.25);z-index:2}
+.stip{display:none;position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:rgba(13,10,30,.9);color:#fff;font-size:10px;padding:3px 7px;border-radius:5px;white-space:nowrap;z-index:10;pointer-events:none}
+.swatch:hover .stip{display:block}
+
+/* ══ AVOID ══ */
+.avsec{margin-bottom:18px}
+.avrow{display:flex;flex-wrap:wrap;gap:6px}
+.avchip{
+  display:flex;align-items:center;gap:5px;padding:5px 10px;
+  border-radius:20px;font-size:11.5px;font-weight:500;
+  background:#FFF1F2;color:#BE123C;border:1.5px solid #FECDD3;
+  transition:all .2s;
+}
+.avchip:hover{transform:scale(1.05)}
+.avdot{width:8px;height:8px;border-radius:50%}
+.divl{height:1px;background:var(--line);margin:18px 0}
+
+/* ══ AI BOX ══ */
+.ai-box{
+  background:linear-gradient(135deg,rgba(79,70,229,.07),rgba(147,51,234,.05));
+  border:1.5px solid rgba(79,70,229,.2);border-radius:14px;
+  padding:14px;margin-bottom:16px;
+  animation:stepIn .5s ease both;
+}
+.ai-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--ink);margin-bottom:7px;display:flex;align-items:center;gap:6px}
+.ai-tag{background:linear-gradient(135deg,#4F46E5,#9333EA);color:#fff;font-size:10px;padding:2px 7px;border-radius:20px;font-weight:700;animation:sparkle 2s ease-in-out infinite}
+.ai-text{font-size:13px;color:var(--mid);line-height:1.7}
+.ai-loading{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--soft)}
+.ai-dot{width:5px;height:5px;border-radius:50%;background:#4F46E5;animation:bounce .8s ease-in-out infinite}
+.ai-dot:nth-child(2){animation-delay:.15s}.ai-dot:nth-child(3){animation-delay:.3s}
+
+/* ══ OUTFIT CARDS ══ */
+.osec{margin-bottom:20px}
+.ogrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+.ocard{
+  border-radius:16px;overflow:hidden;background:var(--card);
+  border:2px solid rgba(79,70,229,.08);
+  box-shadow:0 4px 16px rgba(79,70,229,.07);cursor:pointer;
+  transition:all .3s cubic-bezier(.22,1,.36,1);
+  animation:cardPop .5s ease both;
+}
+.ocard:nth-child(1){animation-delay:.0s}
+.ocard:nth-child(2){animation-delay:.08s}
+.ocard:nth-child(3){animation-delay:.16s}
+.ocard:nth-child(4){animation-delay:.24s}
+@keyframes cardPop{from{opacity:0;transform:translateY(20px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+.ocard:hover{
+  transform:translateY(-8px) scale(1.02);
+  box-shadow:0 20px 48px rgba(79,70,229,.22);
+  border-color:#4F46E5;
+}
+.oimg{width:100%;height:190px;position:relative;overflow:hidden;background:#EEF0FF}
+.oimg img{
+  width:100%;height:100%;object-fit:cover;object-position:top;
+  display:block;transition:transform .5s ease;
+  position:relative;z-index:1;
+}
+.ocard:hover .oimg img{transform:scale(1.1)}
+.shimmer{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:6px;
+  background:linear-gradient(135deg,#EEF0FF,#E0E4FF);z-index:0;
+  color:var(--soft);font-size:11px;font-weight:600;
+}
+.shimmer::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.4) 50%,transparent 100%);
+  background-size:200% 100%;
+  animation:shimmerAnim 1.5s infinite;
+}
+@keyframes shimmerAnim{0%{background-position:-200% 0}100%{background-position:200% 0}}
+.sh-ico{
+  width:38px;height:38px;background:rgba(79,70,229,.15);
+  border-radius:10px;display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:700;color:#4F46E5;z-index:1;
+}
+.fbadge{
+  position:absolute;top:8px;left:8px;color:#fff;
+  font-size:9.5px;font-weight:700;padding:3px 8px;
+  border-radius:20px;backdrop-filter:blur(8px);z-index:2;
+  box-shadow:0 2px 8px rgba(0,0,0,.2);
+}
+.cbar{position:absolute;bottom:0;left:0;right:0;height:5px;display:flex;z-index:2}
+.cseg{flex:1;transition:opacity .3s}
+.ocard:hover .cseg{opacity:.8}
+.oinfo{padding:10px 12px 12px;border-top:1px solid rgba(79,70,229,.07)}
+.oinfo h4{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--ink);margin-bottom:3px;line-height:1.4}
+.oinfo p{font-size:10.5px;color:var(--soft);line-height:1.4;margin-bottom:6px}
+.cdots{display:flex;gap:4px}
+.cdot{
+  width:13px;height:13px;border-radius:50%;
+  border:2px solid rgba(255,255,255,.8);
+  box-shadow:0 1px 4px rgba(0,0,0,.15);
+  transition:transform .2s;
+}
+.cdot:hover{transform:scale(1.3)}
+
+/* ══ CHAT ══ */
+.chat-wrap{display:flex;flex-direction:column;height:370px}
+.chat-box{
+  flex:1;overflow-y:auto;padding:12px;
+  border:2px solid var(--iborder);border-radius:13px;
+  background:var(--ibg);margin-bottom:9px;
+  display:flex;flex-direction:column;gap:9px;
+  scroll-behavior:smooth;
+}
+.msg{
+  max-width:85%;padding:10px 13px;border-radius:13px;
+  font-size:13px;line-height:1.55;
+  animation:msgPop .3s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes msgPop{from{opacity:0;transform:translateY(10px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+.msg-ai{background:var(--abg);color:var(--ink);border-radius:4px 13px 13px 13px;align-self:flex-start}
+.msg-user{background:linear-gradient(135deg,#4F46E5,#7C3AED);color:#fff;border-radius:13px 4px 13px 13px;align-self:flex-end}
+.msg-name{font-size:10px;font-weight:700;margin-bottom:3px;opacity:.6}
+.chat-inp-row{display:flex;gap:8px}
+.chat-inp{
+  flex:1;padding:11px 13px;border:2px solid var(--iborder);border-radius:11px;
+  font-family:'DM Sans',sans-serif;font-size:13.5px;color:var(--ink);
+  background:var(--tbg);outline:none;transition:all .25s;
+}
+.chat-inp:focus{border-color:#4F46E5;box-shadow:0 0 0 3px rgba(79,70,229,.1);transform:translateY(-1px)}
+body.dark .chat-inp:focus{background:var(--ibg)}
+.chat-inp::placeholder{color:var(--soft)}
+.chat-send{
+  padding:11px 16px;border:none;border-radius:11px;
+  background:linear-gradient(135deg,#4F46E5,#7C3AED);
+  color:#fff;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;
+  cursor:pointer;transition:all .25s;white-space:nowrap;
+}
+.chat-send:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(79,70,229,.4)}
+.sugg-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.sugg{
+  padding:6px 12px;border:1.5px solid var(--iborder);border-radius:20px;
+  font-size:11.5px;color:var(--mid);background:var(--tbg);
+  cursor:pointer;transition:all .2s;font-weight:500;
+}
+.sugg:hover{border-color:#4F46E5;color:#4F46E5;transform:translateY(-1px)}
+
+/* ══ ACTIONS ══ */
+.arow{display:flex;gap:8px;flex-wrap:wrap;padding-top:6px;border-top:1px solid var(--line)}
+.bact{
+  flex:1;padding:10px 8px;border:2px solid var(--iborder);
+  border-radius:11px;background:var(--tbg);color:var(--mid);
+  font-family:'DM Sans',sans-serif;font-size:12.5px;font-weight:500;
+  cursor:pointer;transition:all .25s;
+  display:flex;align-items:center;justify-content:center;gap:4px;min-width:80px;
+}
+.bact:hover{border-color:#4F46E5;color:#4F46E5;transform:translateY(-2px);box-shadow:0 4px 12px rgba(79,70,229,.15)}
+.bact.ok{border-color:#10B981;color:#10B981}
+
+/* ══ SHARE MODAL ══ */
+.moverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(6px)}
+.moverlay.on{display:flex;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal{
+  background:var(--card);border-radius:22px;padding:22px;
+  width:100%;max-width:340px;
+  box-shadow:0 28px 70px rgba(0,0,0,.35);
+  animation:modalUp .3s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes modalUp{from{opacity:0;transform:translateY(30px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+.modal h3{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.msub{font-size:13px;color:var(--soft);margin-bottom:13px}
+.clrow{display:flex;gap:7px;margin-bottom:11px}
+.clinp{flex:1;padding:9px 10px;border:2px solid var(--iborder);border-radius:8px;font-size:12px;color:var(--mid);background:var(--ibg);outline:none;font-family:'DM Sans',sans-serif}
+.clbtn{padding:9px 12px;border:none;border-radius:8px;background:linear-gradient(135deg,#4F46E5,#7C3AED);color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap}
+.sbtns{display:flex;flex-direction:column;gap:7px}
+.sbtn-item{display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:10px;border:2px solid var(--iborder);background:var(--tbg);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:var(--ink);transition:all .2s;text-decoration:none;width:100%}
+.sbtn-item:hover{border-color:#4F46E5;color:#4F46E5;transform:translateX(3px)}
+.sico{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;font-weight:700;color:#fff}
+.mclose{margin-top:9px;width:100%;padding:10px;border:none;border-radius:10px;background:linear-gradient(135deg,#4F46E5,#7C3AED);color:#fff;font-family:'Syne',sans-serif;font-size:13.5px;font-weight:700;cursor:pointer;transition:all .2s}
+.mclose:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(79,70,229,.4)}
+
+/* ══ TOAST ══ */
+.toast{
+  position:fixed;bottom:24px;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:rgba(13,10,30,.95);
+  backdrop-filter:blur(10px);
+  color:#fff;padding:11px 22px;border-radius:50px;
+  font-size:13px;font-weight:500;z-index:9999;
+  transition:transform .35s cubic-bezier(.22,1,.36,1);
+  pointer-events:none;
+  box-shadow:0 8px 24px rgba(0,0,0,.3);
+  border:1px solid rgba(255,255,255,.1);
+}
+.toast.on{transform:translateX(-50%) translateY(0)}
+
+/* ══ FOOTER ══ */
+.foot{
+  text-align:center;margin-top:16px;
+  display:flex;justify-content:center;gap:16px;
+  animation:slideDown .6s ease both;animation-delay:.3s;
+}
+.foot a{color:rgba(255,255,255,.5);font-size:12px;text-decoration:none;transition:color .2s}
+.foot a:hover{color:#fff}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:480px){
+  .g2{grid-template-columns:1fr}
+  .ch,.cb{padding-left:16px;padding-right:16px}
+  .ch h1{font-size:21px}
+  .ogrid{grid-template-columns:1fr 1fr}
+  .rh{flex-direction:column}
+}
+@media(max-width:340px){.ogrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- PARTICLES -->
+<div id="particles"></div>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="lpill">
+      <!-- Lotus Logo Circle -->
+      <div class="logo-circle">
+        <svg width="34" height="34" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="tlbg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#1E1B4B"/><stop offset="100%" stop-color="#0F0A2A"/></radialGradient>
+            <radialGradient id="tlgl" cx="50%" cy="60%" r="50%"><stop offset="0%" stop-color="#7C3AED" stop-opacity="0.5"/><stop offset="100%" stop-color="#4F46E5" stop-opacity="0"/></radialGradient>
+            <linearGradient id="tlp1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#C4B5FD"/><stop offset="100%" stop-color="#7C3AED"/></linearGradient>
+            <linearGradient id="tlp2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#DDD6FE"/><stop offset="100%" stop-color="#8B5CF6"/></linearGradient>
+            <linearGradient id="tlp3" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#6D28D9"/><stop offset="100%" stop-color="#A78BFA"/></linearGradient>
+            <linearGradient id="tlcg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FDE68A"/><stop offset="100%" stop-color="#D97706"/></linearGradient>
+            <linearGradient id="tlbrd" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#818CF8"/><stop offset="100%" stop-color="#4F46E5"/></linearGradient>
+            <filter id="tlgf"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <clipPath id="tlcc"><circle cx="150" cy="150" r="143"/></clipPath>
+          </defs>
+          <circle cx="150" cy="150" r="146" fill="none" stroke="url(#tlbrd)" stroke-width="6"/>
+          <circle cx="150" cy="150" r="143" fill="url(#tlbg)"/>
+          <ellipse cx="150" cy="168" rx="85" ry="75" fill="url(#tlgl)" clip-path="url(#tlcc)"/>
+          <!-- Lily pad -->
+          <ellipse cx="150" cy="232" rx="88" ry="20" fill="rgba(67,56,202,.4)" clip-path="url(#tlcc)"/>
+          <path d="M96 228 Q108 213 150 213 Q192 213 204 228 Q192 240 150 243 Q108 240 96 228Z" fill="#166534" opacity=".7" clip-path="url(#tlcc)"/>
+          <!-- Back petals -->
+          <path d="M150 206 Q126 172 130 134 Q137 107 150 100 Q163 107 170 134 Q174 172 150 206Z" fill="#5B21B6" opacity=".52" transform="rotate(-72 150 206)" clip-path="url(#tlcc)"/>
+          <path d="M150 206 Q126 172 130 134 Q137 107 150 100 Q163 107 170 134 Q174 172 150 206Z" fill="#5B21B6" opacity=".52" transform="rotate(72 150 206)" clip-path="url(#tlcc)"/>
+          <path d="M150 206 Q126 172 130 134 Q137 107 150 100 Q163 107 170 134 Q174 172 150 206Z" fill="#5B21B6" opacity=".45" transform="rotate(-144 150 206)" clip-path="url(#tlcc)"/>
+          <path d="M150 206 Q126 172 130 134 Q137 107 150 100 Q163 107 170 134 Q174 172 150 206Z" fill="#5B21B6" opacity=".45" transform="rotate(144 150 206)" clip-path="url(#tlcc)"/>
+          <!-- Mid petals -->
+          <path d="M150 202 Q123 165 128 126 Q136 97 150 90 Q164 97 172 126 Q177 165 150 202Z" fill="url(#tlp3)" opacity=".74" transform="rotate(-50 150 202)" clip-path="url(#tlcc)"/>
+          <path d="M150 202 Q123 165 128 126 Q136 97 150 90 Q164 97 172 126 Q177 165 150 202Z" fill="url(#tlp3)" opacity=".74" transform="rotate(50 150 202)" clip-path="url(#tlcc)"/>
+          <path d="M150 202 Q123 165 128 126 Q136 97 150 90 Q164 97 172 126 Q177 165 150 202Z" fill="url(#tlp3)" opacity=".65" transform="rotate(-110 150 202)" clip-path="url(#tlcc)"/>
+          <path d="M150 202 Q123 165 128 126 Q136 97 150 90 Q164 97 172 126 Q177 165 150 202Z" fill="url(#tlp3)" opacity=".65" transform="rotate(110 150 202)" clip-path="url(#tlcc)"/>
+          <!-- Front petals -->
+          <path d="M150 200 Q120 162 126 120 Q135 90 150 83 Q165 90 174 120 Q180 162 150 200Z" fill="url(#tlp1)" opacity=".92" transform="rotate(-30 150 200)" clip-path="url(#tlcc)"/>
+          <path d="M150 200 Q120 162 126 120 Q135 90 150 83 Q165 90 174 120 Q180 162 150 200Z" fill="url(#tlp1)" opacity=".92" transform="rotate(30 150 200)" clip-path="url(#tlcc)"/>
+          <path d="M150 198 Q122 158 128 114 Q137 84 150 77 Q163 84 172 114 Q178 158 150 198Z" fill="url(#tlp2)" filter="url(#tlgf)" clip-path="url(#tlcc)"/>
+          <!-- Center -->
+          <circle cx="150" cy="172" r="26" fill="url(#tlcg)" filter="url(#tlgf)"/>
+          <circle cx="150" cy="172" r="19" fill="#FBBF24"/>
+          <circle cx="150" cy="172" r="12" fill="#FDE68A"/>
+          <circle cx="150" cy="172" r="4" fill="#92400E"/>
+        </svg>
+      </div>
+      <b>ColorFit AI</b><span class="ai-badge">AI</span>
+    </div>
+    <button class="dmbtn" id="dmb" onclick="toggleDark()">Moon Dark</button>
+  </div>
+
+  <div class="card">
+    <div class="ch">
+      <h1>Smart Personal Stylist</h1>
+      <p>Camera skin detection + AI outfit picks + Style chat</p>
+    </div>
+    <div class="cb">
+
+      <!-- STEP 1 -->
+      <div class="step on" id="s1">
+
+        <!-- SKIN TONE -->
+        <div class="cam-box" id="camBox">
+          <h3>Skin Tone Detection</h3>
+          <p>Upload photo, use camera or tap your skin tone below</p>
+          <div class="cam-btns">
+            <button class="cam-btn pr" onclick="document.getElementById('imgUp').click()">Upload Photo</button>
+            <button class="cam-btn" onclick="startCam()">Open Camera</button>
+            <button class="cam-btn" onclick="document.getElementById('camBox').style.display='none'">Skip</button>
+          </div>
+          <input type="file" id="imgUp" accept="image/*" style="display:none" onchange="handleImg(event)"/>
+          <div id="camArea" style="display:none;margin-top:12px">
+            <video id="camVid" autoplay playsinline muted style="width:100%;max-height:200px;border-radius:12px;object-fit:cover;background:#1A1A2E;display:block"></video>
+            <button onclick="capFrame()" style="display:block;width:100%;margin-top:8px;padding:10px;background:linear-gradient(135deg,#4F46E5,#7C3AED);color:#fff;border:none;border-radius:10px;font-family:DM Sans,sans-serif;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 15px rgba(79,70,229,.35)">Capture Skin Tone</button>
+            <button onclick="stopCam()" style="display:block;width:100%;margin-top:6px;padding:8px;background:transparent;color:#9A94BB;border:1.5px solid rgba(79,70,229,.2);border-radius:10px;font-family:DM Sans,sans-serif;font-size:12px;cursor:pointer">Cancel</button>
+          </div>
+          <canvas id="camCv" style="display:none"></canvas>
+          <!-- Skin circles -->
+          <div style="margin-top:14px">
+            <div style="font-size:11px;font-weight:700;color:var(--soft);margin-bottom:10px;letter-spacing:.5px;text-align:center">TAP YOUR SKIN TONE</div>
+            <div class="skin-circles">
+              <div style="text-align:center"><div class="sc" style="background:#FDDBB4" onclick="setSkin('#FDDBB4','Fair',this)" title="Fair"></div><div class="sc-label">Fair</div></div>
+              <div style="text-align:center"><div class="sc" style="background:#EDB98A" onclick="setSkin('#EDB98A','Light',this)" title="Light"></div><div class="sc-label">Light</div></div>
+              <div style="text-align:center"><div class="sc" style="background:#D2A679" onclick="setSkin('#D2A679','Medium',this)" title="Medium"></div><div class="sc-label">Medium</div></div>
+              <div style="text-align:center"><div class="sc" style="background:#C68642" onclick="setSkin('#C68642','Wheatish',this)" title="Wheatish"></div><div class="sc-label">Wheatish</div></div>
+              <div style="text-align:center"><div class="sc" style="background:#8D5524" onclick="setSkin('#8D5524','Brown',this)" title="Brown"></div><div class="sc-label">Brown</div></div>
+              <div style="text-align:center"><div class="sc" style="background:#4A2912" onclick="setSkin('#4A2912','Dark',this)" title="Dark"></div><div class="sc-label">Dark</div></div>
+              <div style="text-align:center"><div class="sc" style="background:#2C1810" onclick="setSkin('#2C1810','Deep',this)" title="Deep"></div><div class="sc-label">Deep</div></div>
+            </div>
+          </div>
+          <div class="det-color" id="detCol">
+            <div class="dc-box" id="dcBox"></div>
+            <div><div style="font-weight:600;font-size:13px">Skin tone selected!</div><div id="dcHex" style="font-size:11.5px;color:var(--soft)"></div></div>
+          </div>
+        </div>
+
+        <div class="fg">
+          <label class="lb">Gender</label>
+          <div class="gtog">
+            <button class="gb on" id="gM" onclick="setG('male')">Male</button>
+            <button class="gb" id="gF" onclick="setG('female')">Female</button>
+          </div>
+        </div>
+        <div class="g2">
+          <div class="fg"><label class="lb">Age</label><input type="number" id="iAge" class="inp" placeholder="e.g. 22" min="10" max="80"/></div>
+          <div class="fg"><label class="lb">Height (cm)</label><input type="number" id="iH" class="inp" placeholder="e.g. 175"/></div>
+        </div>
+        <div class="g2">
+          <div class="fg"><label class="lb">Weight (kg)</label><input type="number" id="iW" class="inp" placeholder="e.g. 68"/></div>
+          <div class="fg">
+            <label class="lb">Occasion</label>
+            <div class="selw"><select id="iOcc" class="sel">
+              <option value="casual">Casual</option><option value="party">Party</option>
+              <option value="college">College</option><option value="office">Office</option>
+              <option value="wedding">Wedding</option><option value="indian">Indian Traditional</option>
+              <option value="western">Western</option><option value="arabian">Arabian</option>
+              <option value="korean">Korean / KPOP</option><option value="japanese">Japanese</option>
+              <option value="streetwear">Streetwear</option><option value="travel">Travel</option>
+              <option value="gym">Gym</option><option value="beach">Beach</option>
+              <option value="formal">Formal</option>
+            </select></div>
+          </div>
+        </div>
+        <div class="fg">
+          <label class="lb">Skin HEX <span style="font-weight:400;text-transform:none;color:var(--soft)">(auto or manual)</span></label>
+          <div class="hxr"><input type="text" id="iHex" class="inp" placeholder="#D2A679"/><div class="hxd" id="hxp"></div></div>
+          <div class="err" id="hexErr">Valid HEX e.g. #D2A679</div>
+          <p class="hint">Tap a skin circle above to fill automatically</p>
+        </div>
+        <button class="bmain" onclick="gen()">Get My AI Style</button>
+      </div>
+
+      <!-- LOADING -->
+      <div class="ld" id="ld">
+        <div class="sp-wrap"><div class="sp"></div><div class="sp-inner"></div></div>
+        <p id="lt">Analyzing with AI...</p>
+        <div class="ld-dots"><div class="ld-dot"></div><div class="ld-dot"></div><div class="ld-dot"></div></div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="step" id="s2">
+        <div class="tabs">
+          <button class="tab-btn on" onclick="switchTab('outfit')">Outfits</button>
+          <button class="tab-btn" onclick="switchTab('colors')">Colors</button>
+          <button class="tab-btn" onclick="switchTab('chat')">AI Chat</button>
+        </div>
+
+        <!-- OUTFITS -->
+        <div id="tab-outfit">
+          <div class="rh">
+            <div><h2 id="rT">Your Style</h2><small id="rS"></small></div>
+            <button class="bgo" onclick="reset()">Back</button>
+          </div>
+          <div id="skinB" class="sbadge"></div>
+          <div class="pstrip" id="pstrip"></div>
+          <div class="ai-box">
+            <div class="ai-title">AI Style Advice <span class="ai-tag">Claude AI</span></div>
+            <div id="aiText"><div class="ai-loading"><div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div><span style="margin-left:5px;font-size:13px;color:var(--soft)">Getting AI advice...</span></div></div>
+          </div>
+          <div class="osec">
+            <div class="st" id="oTitle">Outfit Picks</div>
+            <div class="ogrid" id="oGrid"></div>
+          </div>
+          <div class="arow">
+            <button class="bact" id="cpyB" onclick="copyR()">Copy</button>
+            <button class="bact" onclick="openShare()">Share</button>
+            <button class="bact" onclick="reset()">Again</button>
+          </div>
+        </div>
+
+        <!-- COLORS -->
+        <div id="tab-colors" style="display:none">
+          <div class="psec"><div class="st">Best Colors <span class="cnt" id="cCnt">24</span></div><div class="pgrid" id="pGrid"></div></div>
+          <div class="avsec"><div class="st">Avoid These</div><div class="avrow" id="avRow"></div></div>
+        </div>
+
+        <!-- CHAT -->
+        <div id="tab-chat" style="display:none">
+          <div class="sugg-row" id="suggRow"></div>
+          <div class="chat-wrap">
+            <div class="chat-box" id="chatBox">
+              <div class="msg msg-ai"><div class="msg-name">ColorFit AI</div>Hello! I am your personal AI style assistant. Ask me anything about fashion, colors or what to wear!</div>
+            </div>
+            <div class="chat-inp-row">
+              <input class="chat-inp" id="chatInp" placeholder="Ask your style question..." onkeydown="if(event.key==='Enter')sendChat()"/>
+              <button class="chat-send" onclick="sendChat()">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="foot">
+    <a href="privacy.html" target="_blank">Privacy Policy</a>
+    <a href="#">2025 ColorFit AI</a>
+  </div>
+</div>
+
+<!-- SHARE MODAL -->
+<div class="moverlay" id="sm" onclick="if(event.target===this)closeShare()">
+  <div class="modal">
+    <h3>Share ColorFit AI</h3>
+    <p class="msub">Share with friends!</p>
+    <div class="clrow"><input class="clinp" id="surl" value="https://colourfitai.vercel.app" readonly/><button class="clbtn" onclick="cpLink()">Copy</button></div>
+    <div class="sbtns">
+      <a class="sbtn-item" id="waB" href="#" target="_blank"><div class="sico" style="background:#25D366">W</div><div><div style="font-weight:600">WhatsApp</div><div style="font-size:11px;color:var(--soft)">Share on WhatsApp</div></div></a>
+      <a class="sbtn-item" id="twB" href="#" target="_blank"><div class="sico" style="background:#1DA1F2">X</div><div><div style="font-weight:600">Twitter / X</div><div style="font-size:11px;color:var(--soft)">Post on Twitter</div></div></a>
+      <a class="sbtn-item" id="tgB" href="#" target="_blank"><div class="sico" style="background:#0088cc">T</div><div><div style="font-weight:600">Telegram</div><div style="font-size:11px;color:var(--soft)">Share on Telegram</div></div></a>
+      <button class="sbtn-item" onclick="natShare()"><div class="sico" style="background:#4F46E5">+</div><div><div style="font-weight:600">More Options</div></div></button>
+    </div>
+    <button class="mclose" onclick="closeShare()">Close</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ── PARTICLES ── */
+(function(){
+  var c=document.getElementById('particles');
+  for(var i=0;i<18;i++){
+    var p=document.createElement('div');
+    p.className='particle';
+    var sz=Math.random()*12+4;
+    p.style.cssText='width:'+sz+'px;height:'+sz+'px;left:'+Math.random()*100+'%;animation-duration:'+(Math.random()*15+8)+'s;animation-delay:'+(Math.random()*10)+'s;opacity:'+(Math.random()*.3+.05);
+    c.appendChild(p);
+  }
+})();
+
+/* ── STATE ── */
+var ST={g:'male',age:22,h:175,w:68,occ:'casual',hex:'#D2A679'};
+var DARK=false;
+var chatHistory=[];
+var camStream=null;
+
+/* ── DARK MODE ── */
+function toggleDark(){
+  DARK=!DARK;
+  document.body.classList.toggle('dark',DARK);
+  document.getElementById('dmb').textContent=DARK?'Sun Light':'Moon Dark';
+  try{localStorage.setItem('cfdk',DARK?'1':'0');}catch(e){}
+}
+try{if(localStorage.getItem('cfdk')==='1'){DARK=true;document.body.classList.add('dark');document.getElementById('dmb').textContent='Sun Light';}}catch(e){}
+
+/* ── SKIN CIRCLES ── */
+function setSkin(hex,name,el){
+  document.getElementById('dcBox').style.background=hex;
+  document.getElementById('dcHex').textContent=hex+' — '+name;
+  document.getElementById('detCol').style.display='flex';
+  document.getElementById('iHex').value=hex;
+  document.getElementById('hxp').style.background=hex;
+  setBg(hex);
+  showT(name+' selected!');
+  document.querySelectorAll('.sc').forEach(function(s){s.classList.remove('active');});
+  if(el)el.classList.add('active');
+}
+
+/* ── CAMERA ── */
+function startCam(){
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
+    showT('Camera not supported — use Upload Photo');
+    document.getElementById('imgUp').click();return;
+  }
+  navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:640},height:{ideal:480}}})
+  .then(function(s){
+    camStream=s;
+    var v=document.getElementById('camVid');
+    v.srcObject=s;
+    document.getElementById('camArea').style.display='block';
+    v.play().catch(function(){});
+  }).catch(function(){
+    showT('Camera blocked — use Upload Photo');
+    document.getElementById('imgUp').click();
+  });
+}
+function stopCam(){
+  if(camStream){camStream.getTracks().forEach(function(t){t.stop();});camStream=null;}
+  document.getElementById('camArea').style.display='none';
+}
+function capFrame(){
+  var v=document.getElementById('camVid'),cv=document.getElementById('camCv');
+  if(!v.videoWidth){showT('Camera loading, try again');return;}
+  cv.width=v.videoWidth;cv.height=v.videoHeight;
+  cv.getContext('2d').drawImage(v,0,0);
+  stopCam();detectSkin(cv);
+}
+function handleImg(e){
+  var f=e.target.files[0];if(!f)return;
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    var img=new Image();
+    img.onload=function(){
+      var cv=document.getElementById('camCv');
+      cv.width=img.width;cv.height=img.height;
+      cv.getContext('2d').drawImage(img,0,0);
+      detectSkin(cv);
+    };
+    img.src=ev.target.result;
+  };
+  reader.readAsDataURL(f);
+}
+function detectSkin(cv){
+  var ctx=cv.getContext('2d'),w=cv.width,h=cv.height;
+  var cx=Math.floor(w/2),cy=Math.floor(h/3),sz=Math.min(w,h,100);
+  var x=Math.max(0,cx-sz/2),y=Math.max(0,cy-sz/2);
+  var data=ctx.getImageData(x,y,Math.min(sz,w-x),Math.min(sz,h-y)).data;
+  var r=0,g=0,b=0,n=0;
+  for(var i=0;i<data.length;i+=4){
+    var bri=(data[i]+data[i+1]+data[i+2])/3;
+    if(bri>30&&bri<230){r+=data[i];g+=data[i+1];b+=data[i+2];n++;}
+  }
+  if(!n){showT('Could not detect — try again');return;}
+  r=Math.round(r/n);g=Math.round(g/n);b=Math.round(b/n);
+  var hex='#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1).toUpperCase();
+  document.getElementById('dcBox').style.background=hex;
+  document.getElementById('dcHex').textContent=hex+' — detected';
+  document.getElementById('detCol').style.display='flex';
+  document.getElementById('iHex').value=hex;
+  document.getElementById('hxp').style.background=hex;
+  setBg(hex);showT('Skin tone detected!');
+}
+
+/* ── HELPERS ── */
+function setG(g){ST.g=g;document.getElementById('gM').classList.toggle('on',g==='male');document.getElementById('gF').classList.toggle('on',g==='female');}
+document.getElementById('iHex').addEventListener('input',function(){var v=this.value.trim();if(/^#[0-9A-Fa-f]{6}$/.test(v)){document.getElementById('hxp').style.background=v;setBg(v);}});
+function setBg(h){
+  var r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16),hh=getHue(r,g,b);
+  document.body.style.background='linear-gradient(135deg,hsl('+hh+',65%,20%),hsl('+((hh+20)%360)+',60%,30%),hsl('+((hh+40)%360)+',58%,38%),hsl('+((hh+60)%360)+',55%,44%))';
+  document.body.style.backgroundSize='400% 400%';
+}
+function getHue(r,g,b){r/=255;g/=255;b/=255;var mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn,h=0;if(!d)return 200;if(mx===r)h=((g-b)/d)%6;else if(mx===g)h=(b-r)/d+2;else h=(r-g)/d+4;return Math.round(h*60+360)%360;}
+function vHex(h){return/^#[0-9A-Fa-f]{6}$/.test(h);}
+function toRgb(hex){return{r:parseInt(hex.slice(1,3),16),g:parseInt(hex.slice(3,5),16),b:parseInt(hex.slice(5,7),16)};}
+function brCalc(r,g,b){return(r*299+g*587+b*114)/1000;}
+function skinType(b){return b>=200?'fair':b>=140?'medium':'dark';}
+function bmi(h,w){return w/((h/100)*(h/100));}
+function bodyType(h,w){var b=bmi(h,w);return b<18.5?'slim':b<25?'medium':b<30?'heavy':'obese';}
+function fitLabel(b){return b==='slim'?'Slim Fit':b==='medium'?'Regular Fit':b==='heavy'?'Relaxed Fit':'Oversized Fit';}
+function ageGroup(a){return a<18?'teen':a<25?'young':a<35?'midyoung':a<50?'adult':'senior';}
+function heightGroup(h){return h<163?'Petite':h<178?'Average':'Tall';}
+function fitColor(f){if(f==='Slim Fit')return'rgba(79,70,229,.9)';if(f==='Regular Fit')return'rgba(5,150,105,.9)';if(f==='Relaxed Fit')return'rgba(217,119,6,.9)';return'rgba(147,51,234,.9)';}
+function switchTab(n){['outfit','colors','chat'].forEach(function(t){document.getElementById('tab-'+t).style.display=t===n?'block':'none';});document.querySelectorAll('.tab-btn').forEach(function(b,i){b.classList.toggle('on',['outfit','colors','chat'][i]===n);});}
+
+/* ── PALETTES ── */
+var PAL={
+  fair:{best:[{h:'#0F4C81',n:'Navy Blue'},{h:'#C41E3A',n:'Crimson'},{h:'#2E8B57',n:'Sea Green'},{h:'#FF6B6B',n:'Coral'},{h:'#B8860B',n:'Dark Gold'},{h:'#4B0082',n:'Indigo'},{h:'#008080',n:'Teal'},{h:'#8B0000',n:'Dark Red'},{h:'#556B2F',n:'Olive'},{h:'#191970',n:'Midnight'},{h:'#D4AF37',n:'Gold'},{h:'#9370DB',n:'Purple'},{h:'#20B2AA',n:'Lt Teal'},{h:'#CD853F',n:'Peru'},{h:'#228B22',n:'Forest'},{h:'#4169E1',n:'Royal Blue'},{h:'#DC143C',n:'Crimson Red'},{h:'#2F4F4F',n:'Dark Slate'},{h:'#8FBC8F',n:'Sea Green'},{h:'#DAA520',n:'Goldenrod'},{h:'#B22222',n:'Firebrick'},{h:'#483D8B',n:'Slate Blue'},{h:'#1A1A2E',n:'Midnight'},{h:'#FFF8DC',n:'Ivory'}],avoid:[{h:'#FFD700',n:'Bright Yellow'},{h:'#FFA500',n:'Orange'},{h:'#FFE4E1',n:'Misty Rose'},{h:'#FFFACD',n:'Lemon'}]},
+  medium:{best:[{h:'#FFFFFF',n:'White'},{h:'#F5F5DC',n:'Cream'},{h:'#FFD700',n:'Gold'},{h:'#FF6347',n:'Tomato'},{h:'#00CED1',n:'Turquoise'},{h:'#8A2BE2',n:'Blue Violet'},{h:'#32CD32',n:'Lime Green'},{h:'#FF4500',n:'Orange Red'},{h:'#1E90FF',n:'Dodger Blue'},{h:'#FF1493',n:'Deep Pink'},{h:'#00FA9A',n:'Spring Green'},{h:'#FF8C00',n:'Dark Orange'},{h:'#7B68EE',n:'Slate Blue'},{h:'#48D1CC',n:'Turquoise'},{h:'#FA8072',n:'Salmon'},{h:'#40E0D0',n:'Aqua'},{h:'#EE82EE',n:'Violet'},{h:'#90EE90',n:'Lt Green'},{h:'#F08080',n:'Lt Coral'},{h:'#B0C4DE',n:'Steel Blue'},{h:'#AFEEEE',n:'Pale Turq'},{h:'#E6E6FA',n:'Lavender'},{h:'#FFA07A',n:'Lt Salmon'},{h:'#98FB98',n:'Pale Green'}],avoid:[{h:'#808080',n:'Grey'},{h:'#A9A9A9',n:'Dark Grey'},{h:'#C0C0C0',n:'Silver'},{h:'#D3D3D3',n:'Lt Grey'}]},
+  dark:{best:[{h:'#FFFFFF',n:'White'},{h:'#FFFAFA',n:'Snow'},{h:'#F0FFFF',n:'Azure'},{h:'#E0FFFF',n:'Lt Cyan'},{h:'#FFFFE0',n:'Lt Yellow'},{h:'#7FFFD4',n:'Aquamarine'},{h:'#00FF7F',n:'Spring Green'},{h:'#FFC0CB',n:'Pink'},{h:'#FFD700',n:'Gold'},{h:'#FFDAB9',n:'Peach'},{h:'#00BFFF',n:'Sky Blue'},{h:'#FF69B4',n:'Hot Pink'},{h:'#ADFF2F',n:'Yel Green'},{h:'#40E0D0',n:'Turquoise'},{h:'#FF6347',n:'Tomato'},{h:'#EEE8AA',n:'Pale Gold'},{h:'#98FB98',n:'Pale Green'},{h:'#ADD8E6',n:'Lt Blue'},{h:'#F0E68C',n:'Khaki'},{h:'#E6E6FA',n:'Lavender'},{h:'#FFF0F5',n:'Lav Blush'},{h:'#F5FFFA',n:'Mint Cream'},{h:'#FAEBD7',n:'Antique White'},{h:'#F0FFF0',n:'Honeydew'}],avoid:[{h:'#000000',n:'Black'},{h:'#1C1C1C',n:'Near Black'},{h:'#2F2F2F',n:'Very Dark'},{h:'#8B4513',n:'Brown'}]}
+};
+
+/* ── IMAGES ── */
+var IMG={m_shirt:'https://images.unsplash.com/photo-1602810316498-ab67cf68c8e1?w=400&q=80',m_tee:'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&q=80',m_polo:'https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=400&q=80',m_big:'https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=400&q=80',m_hoodie:'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&q=80',m_jogger:'https://images.unsplash.com/photo-1622470953794-aa9c70b0fb9d?w=400&q=80',m_cargo:'https://images.unsplash.com/photo-1552346154-21d32810aba3?w=400&q=80',m_denim:'https://images.unsplash.com/photo-1516257984-b1b4d707412e?w=400&q=80',m_blazer:'https://images.unsplash.com/photo-1588117305388-c2631a279f82?w=400&q=80',m_nsuit:'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80',m_gsuit:'https://images.unsplash.com/photo-1600091166971-7f9faad6c498?w=400&q=80',m_tux:'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=400&q=80',m_kurta:'https://images.unsplash.com/photo-1583397777647-de87af18a867?w=400&q=80',m_sherwani:'https://images.unsplash.com/photo-1591786538873-a37e5ba6c5dc?w=400&q=80',m_thobe:'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=400&q=80',m_gym:'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&q=80',m_linen:'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=400&q=80',m_track:'https://images.unsplash.com/photo-1545346315-f4c47e3e1b55?w=400&q=80',f_top:'https://images.unsplash.com/photo-1485125639709-a60c3a500bf1?w=400&q=80',f_floral:'https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=400&q=80',f_casual:'https://images.unsplash.com/photo-1581044777550-4cfa60707c03?w=400&q=80',f_maxi:'https://images.unsplash.com/photo-1502716119720-b23a93e5fe1b?w=400&q=80',f_summer:'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=400&q=80',f_wrap:'https://images.unsplash.com/photo-1562572159-4efd90232073?w=400&q=80',f_denim:'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&q=80',f_mini:'https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=400&q=80',f_body:'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&q=80',f_gown:'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400&q=80',f_office:'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&q=80',f_jump:'https://images.unsplash.com/photo-1562572159-4efd90232073?w=400&q=80',f_saree:'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=400&q=80',f_lehenga:'https://images.unsplash.com/photo-1621184455862-c163dfb30e0f?w=400&q=80',f_hoodie:'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&q=80',f_cargo:'https://images.unsplash.com/photo-1552346154-21d32810aba3?w=400&q=80',f_gym:'https://images.unsplash.com/photo-1518310383802-640c2de311b6?w=400&q=80',f_sundress:'https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=400&q=80'};
+
+/* ── OUTFITS DB ── */
+var DB={male:{casual:[{n:'White Shirt + Jeans',d:'Clean sharp everyday',i:'m_shirt',c:['#F5F5F5','#1560BD','#8B4513'],f:'Slim Fit',b:['slim','medium']},{n:'Grey Hoodie + Joggers',d:'Cozy street comfort',i:'m_hoodie',c:['#808080','#2A2A2A','#FFF'],f:'Regular Fit',b:['medium']},{n:'Oversized Tee + Cargo',d:'Bold relaxed urban',i:'m_big',c:['#1A1A1A','#556B2F','#FF6347'],f:'Oversized Fit',b:['heavy','obese']},{n:'Navy Polo + Chinos',d:'Smart polished style',i:'m_polo',c:['#001F5B','#C3B091','#FFF'],f:'Regular Fit',b:['slim','medium']},{n:'Denim Jacket + Tee',d:'Classic layered look',i:'m_denim',c:['#4682B4','#FFF','#1A1A1A'],f:'Regular Fit',b:['slim','medium','heavy']},{n:'Linen Shirt + Trousers',d:'Light breathable style',i:'m_linen',c:['#F5DEB3','#C3B091','#FFF'],f:'Relaxed Fit',b:['heavy','obese']}],party:[{n:'Black Shirt + Dark Jeans',d:'Classic night-out',i:'m_blazer',c:['#1A1A1A','#1B2A4A','#C0C0C0'],f:'Slim Fit',b:['slim','medium']},{n:'Maroon Blazer + Black',d:'Suave evening look',i:'m_blazer',c:['#800000','#1A1A1A','#FFF'],f:'Regular Fit',b:['medium']},{n:'Navy Tuxedo',d:'Sharp formal party',i:'m_tux',c:['#001F5B','#FFF','#D4AF37'],f:'Slim Fit',b:['slim','medium']},{n:'Grey Suit + White Shirt',d:'Elegant understated',i:'m_gsuit',c:['#808080','#FFF','#1A1A1A'],f:'Regular Fit',b:['medium','heavy']}],college:[{n:'Hoodie + Slim Joggers',d:'Campus everyday look',i:'m_jogger',c:['#4F46E5','#1A1A1A','#FFF'],f:'Slim Fit',b:['slim','medium'],a:['teen','young']},{n:'Graphic Tee + Cargo',d:'Trendy campus style',i:'m_cargo',c:['#FFD700','#556B2F','#FFF'],f:'Regular Fit',b:['medium'],a:['teen','young']},{n:'Denim Jacket + Chinos',d:'Relaxed layered',i:'m_denim',c:['#4682B4','#C3B091','#FFF'],f:'Regular Fit',b:['slim','medium']},{n:'Oversized Sweatshirt',d:'Comfortable everyday',i:'m_big',c:['#808080','#1560BD','#FFF'],f:'Oversized Fit',b:['heavy','obese']}],office:[{n:'Navy Suit',d:'Power office dressing',i:'m_nsuit',c:['#001F5B','#FFF','#708090'],f:'Slim Fit',b:['slim','medium']},{n:'Grey Suit + Blue Shirt',d:'Smart professional',i:'m_gsuit',c:['#808080','#ADD8E6','#1A1A1A'],f:'Regular Fit',b:['medium']},{n:'Blazer + Chinos',d:'Smart casual office',i:'m_blazer',c:['#2F4F4F','#C3B091','#FFF'],f:'Regular Fit',b:['slim','medium']},{n:'Dark Relaxed Suit',d:'Refined for bigger frames',i:'m_nsuit',c:['#1A1A1A','#FFF','#C0C0C0'],f:'Relaxed Fit',b:['heavy','obese']}],indian:[{n:'Ivory Gold Sherwani',d:'Regal grand look',i:'m_sherwani',c:['#FFFFF0','#D4AF37','#800000'],f:'Regular Fit',b:['slim','medium']},{n:'Royal Blue Kurta',d:'Traditional modern',i:'m_kurta',c:['#4169E1','#F5F5DC','#D4AF37'],f:'Relaxed Fit',b:['medium','heavy']},{n:'White Kurta',d:'Simple elegant',i:'m_kurta',c:['#FFF','#F5F5DC','#D4AF37'],f:'Slim Fit',b:['slim']},{n:'Embroidered Kurta',d:'Comfortable festive',i:'m_kurta',c:['#800000','#F5F5DC','#D4AF37'],f:'Relaxed Fit',b:['heavy','obese']}],arabian:[{n:'Classic White Thobe',d:'Pure traditional',i:'m_thobe',c:['#FFF','#F5F5F5','#D4AF37'],f:'Regular Fit'},{n:'Cream Thobe',d:'Grand occasion',i:'m_thobe',c:['#F5DEB3','#D4AF37','#8B6914'],f:'Relaxed Fit'}],wedding:[{n:'Ivory Sherwani',d:'Timeless bridal look',i:'m_sherwani',c:['#FFFFF0','#D4AF37','#800000'],f:'Slim Fit',b:['slim','medium']},{n:'Blue Bandhgala',d:'Modern wedding formal',i:'m_blazer',c:['#002366','#D4AF37','#FFF'],f:'Regular Fit',b:['medium']}],streetwear:[{n:'Black Tee + Cargo',d:'Bold urban street',i:'m_cargo',c:['#1A1A1A','#556B2F','#FF6347'],f:'Regular Fit',b:['slim','medium'],a:['teen','young']},{n:'White Tracksuit',d:'Clean minimal street',i:'m_track',c:['#FFF','#000','#F00'],f:'Regular Fit',b:['medium']},{n:'Bomber + Cargo',d:'Premium streetwear',i:'m_cargo',c:['#228B22','#000','#FFF'],f:'Relaxed Fit',b:['heavy','obese']}],travel:[{n:'Linen Shirt + Shorts',d:'Light travel wear',i:'m_linen',c:['#F5DEB3','#C3B091','#FFF'],f:'Regular Fit',b:['slim','medium']},{n:'Utility Jacket + Cargo',d:'Adventure ready',i:'m_cargo',c:['#556B2F','#8B6914','#1A1A1A'],f:'Relaxed Fit',b:['medium','heavy']}],gym:[{n:'Tank Top + Shorts',d:'Performance look',i:'m_gym',c:['#CC2200','#1A1A1A','#FFF'],f:'Slim Fit',b:['slim','medium']},{n:'Oversized Gym Tee',d:'Relaxed workout',i:'m_big',c:['#1A1A1A','#808080','#FFF'],f:'Relaxed Fit',b:['heavy','obese']}],korean:[{n:'Pastel Cardigan',d:'K-style aesthetic',i:'m_polo',c:['#FAF0E6','#1A1A1A','#C0C0C0'],f:'Slim Fit',b:['slim','medium']},{n:'Oversized Pastel Shirt',d:'KPOP inspired',i:'m_big',c:['#B0C4DE','#FFF','#808080'],f:'Oversized Fit',b:['medium','heavy']}],japanese:[{n:'Black Kimono Jacket',d:'Minimalist Japanese',i:'m_blazer',c:['#1A1A1A','#8B0000','#FFF'],f:'Regular Fit',b:['slim','medium']},{n:'All White Monochrome',d:'Zen minimal style',i:'m_tee',c:['#FFF','#F0F0F0','#808080'],f:'Oversized Fit',b:['medium','heavy']}],western:[{n:'Flannel + Bootcut Jeans',d:'Classic western',i:'m_denim',c:['#8B0000','#1560BD','#FFF'],f:'Regular Fit'},{n:'Denim Jacket + Boots',d:'Rugged western',i:'m_denim',c:['#4682B4','#8B4513','#FFF'],f:'Relaxed Fit'}],beach:[{n:'Floral Shirt + Shorts',d:'Tropical beach look',i:'m_linen',c:['#FF6347','#1560BD','#FFD700'],f:'Regular Fit'},{n:'White Linen Set',d:'Clean breezy style',i:'m_linen',c:['#FFF','#F5DEB3','#87CEEB'],f:'Relaxed Fit'}],formal:[{n:'Black Tuxedo',d:'Classic black tie',i:'m_tux',c:['#000','#FFF','#C0C0C0'],f:'Slim Fit',b:['slim','medium']},{n:'Midnight Blue Suit',d:'Modern formal',i:'m_nsuit',c:['#191970','#FFF','#D4AF37'],f:'Regular Fit',b:['medium']},{n:'Charcoal Relaxed Suit',d:'Comfortable formal',i:'m_gsuit',c:['#36454F','#FFF','#C0C0C0'],f:'Relaxed Fit',b:['heavy','obese']}]},female:{casual:[{n:'White Top + Mom Jeans',d:'Fresh everyday look',i:'f_top',c:['#FFF','#5B7A99','#C3B091'],f:'Slim Fit',b:['slim','medium']},{n:'Floral Midi Dress',d:'Feminine breezy',i:'f_floral',c:['#FFB6C1','#90EE90','#FFF'],f:'Regular Fit',b:['slim','medium']},{n:'Oversized Sweater',d:'Cozy comfortable',i:'f_hoodie',c:['#DDA0DD','#1A1A1A','#FFF'],f:'Oversized Fit',b:['heavy','obese']},{n:'Denim Skirt + Crop Top',d:'Trendy summer',i:'f_denim',c:['#4682B4','#FFB6C1','#FFF'],f:'Slim Fit',b:['slim'],a:['teen','young']},{n:'Flowy Maxi Dress',d:'Effortless flowy',i:'f_maxi',c:['#F5DEB3','#C3B091','#87CEEB'],f:'Relaxed Fit',b:['heavy','obese']},{n:'Jeans + Floral Blouse',d:'Smart casual',i:'f_casual',c:['#1560BD','#FFB6C1','#FFF'],f:'Regular Fit',b:['medium']}],party:[{n:'Gold Sequin Mini Dress',d:'Glam party look',i:'f_mini',c:['#D4AF37','#C0C0C0','#000'],f:'Slim Fit',b:['slim','medium']},{n:'Red Bodycon Dress',d:'Bold party style',i:'f_body',c:['#DC143C','#000','#C0C0C0'],f:'Slim Fit',b:['slim','medium']},{n:'Black Blazer Dress',d:'Sleek night out',i:'f_office',c:['#1A1A1A','#FFF','#FFD700'],f:'Regular Fit',b:['medium']},{n:'Floral Wrap Dress',d:'Flattering curves',i:'f_wrap',c:['#FF6347','#FFD700','#FFF'],f:'Relaxed Fit',b:['heavy','obese']}],college:[{n:'Oversized Hoodie',d:'Campus comfort look',i:'f_hoodie',c:['#9370DB','#1A1A1A','#FFF'],f:'Oversized Fit',b:['slim','medium'],a:['teen','young']},{n:'Denim Skirt + Crop Tee',d:'Cute campus',i:'f_denim',c:['#4682B4','#FFB6C1','#FFF'],f:'Slim Fit',b:['slim'],a:['teen','young']},{n:'Floral Summer Dress',d:'Light feminine',i:'f_summer',c:['#FFB6C1','#90EE90','#FFF'],f:'Regular Fit',b:['medium','heavy']},{n:'Jogger Set',d:'Sporty-chic',i:'f_hoodie',c:['#FF69B4','#C0C0C0','#FFF'],f:'Relaxed Fit',b:['medium','heavy','obese']}],office:[{n:'Pencil Skirt + Blouse',d:'Classic power look',i:'f_office',c:['#1A1A1A','#FFF','#C0C0C0'],f:'Slim Fit',b:['slim','medium']},{n:'Blazer + Trousers',d:'Sharp professional',i:'f_office',c:['#708090','#FFF','#1A1A1A'],f:'Regular Fit',b:['medium']},{n:'Wrap Dress + Pumps',d:'Flattering workwear',i:'f_wrap',c:['#2F4F4F','#C3B091','#FFF'],f:'Relaxed Fit',b:['heavy','obese']},{n:'Tailored Jumpsuit',d:'Modern office style',i:'f_jump',c:['#1A1A1A','#FFF','#708090'],f:'Regular Fit',b:['slim','medium']}],indian:[{n:'Deep Red Silk Saree',d:'Timeless elegant',i:'f_saree',c:['#8B0000','#D4AF37','#FFF8DC'],f:'Regular Fit',b:['slim','medium']},{n:'Teal Anarkali Suit',d:'Flowy ethnic',i:'f_casual',c:['#008080','#D4AF37','#FFF'],f:'Relaxed Fit',b:['heavy','obese']},{n:'Pink Silver Lehenga',d:'Festive celebration',i:'f_lehenga',c:['#FF69B4','#C0C0C0','#FFF'],f:'Regular Fit',b:['slim','medium']},{n:'Ivory Silk Saree',d:'Classic bridal',i:'f_saree',c:['#FFFFF0','#D4AF37','#FF69B4'],f:'Regular Fit'}],arabian:[{n:'Classic Black Abaya',d:'Elegant traditional',i:'f_maxi',c:['#000','#D4AF37','#FFF'],f:'Regular Fit'},{n:'Turquoise Kaftan',d:'Vibrant occasion',i:'f_maxi',c:['#40E0D0','#D4AF37','#FFF'],f:'Relaxed Fit'}],wedding:[{n:'Red Gold Bridal Lehenga',d:'Classic bridal',i:'f_lehenga',c:['#DC143C','#D4AF37','#800000'],f:'Regular Fit',b:['slim','medium']},{n:'Ivory Silk Saree',d:'Understated elegance',i:'f_saree',c:['#FFFFF0','#D4AF37','#FF69B4'],f:'Regular Fit'},{n:'Floor-Length Gown',d:'Fusion wedding',i:'f_gown',c:['#191970','#D4AF37','#FFF'],f:'Relaxed Fit',b:['heavy','obese']}],streetwear:[{n:'Crop Hoodie + Cargo',d:'Bold feminine street',i:'f_cargo',c:['#FF69B4','#556B2F','#FFF'],f:'Oversized Fit',b:['slim','medium'],a:['teen','young']},{n:'Oversized Flannel',d:'90s grunge revival',i:'f_hoodie',c:['#8B0000','#1A1A1A','#FFF'],f:'Oversized Fit',b:['medium','heavy']}],travel:[{n:'Linen Dress + Hat',d:'Breezy travel chic',i:'f_summer',c:['#F5DEB3','#C3B091','#87CEEB'],f:'Regular Fit'},{n:'Jumpsuit + Sneakers',d:'Practical stylish',i:'f_jump',c:['#556B2F','#FFF','#8B4513'],f:'Relaxed Fit'},{n:'Casual Sundress',d:'Comfortable feminine',i:'f_sundress',c:['#FFD700','#87CEEB','#FFF'],f:'Regular Fit'}],gym:[{n:'Sports Bra + Leggings',d:'Sleek performance',i:'f_gym',c:['#FF6347','#1A1A1A','#FFF'],f:'Slim Fit',b:['slim','medium']},{n:'Oversized Tee + Shorts',d:'Comfortable workout',i:'f_hoodie',c:['#9370DB','#1A1A1A','#FFF'],f:'Relaxed Fit',b:['heavy','obese']}],korean:[{n:'Pastel Midi Dress',d:'Soft K-style look',i:'f_summer',c:['#FFB6C1','#FFF','#DDA0DD'],f:'Regular Fit',b:['slim','medium']},{n:'Oversized Puff Dress',d:'Cute KPOP style',i:'f_floral',c:['#E6E6FA','#FFF','#FFB6C1'],f:'Oversized Fit',b:['medium','heavy']}],japanese:[{n:'Yukata Inspired Dress',d:'Japanese aesthetic',i:'f_wrap',c:['#8B0000','#FFF','#000'],f:'Regular Fit'},{n:'White Minimalist Set',d:'Zen minimal style',i:'f_top',c:['#FFF','#C0C0C0','#1A1A1A'],f:'Oversized Fit'}],western:[{n:'Floral Sundress + Boots',d:'Classic western',i:'f_sundress',c:['#FFD700','#8B4513','#FFF'],f:'Regular Fit'},{n:'Denim Cutoffs + Flannel',d:'Rugged western',i:'f_denim',c:['#4682B4','#8B0000','#FFF'],f:'Relaxed Fit'}],beach:[{n:'Flowy Pink Maxi',d:'Elegant beach look',i:'f_maxi',c:['#FFB6C1','#87CEEB','#FFF'],f:'Regular Fit'},{n:'Tropical Sundress',d:'Fun vibrant beach',i:'f_sundress',c:['#FF6347','#FFD700','#87CEEB'],f:'Relaxed Fit'}],formal:[{n:'Floor-Length Gown',d:'Black-tie elegance',i:'f_gown',c:['#191970','#D4AF37','#FFF'],f:'Slim Fit',b:['slim','medium']},{n:'Classic Black LBD',d:'Understated chic',i:'f_body',c:['#000','#FFFFF0','#C0C0C0'],f:'Regular Fit',b:['medium']},{n:'Flowy Formal Maxi',d:'Elegant fuller figures',i:'f_maxi',c:['#191970','#D4AF37','#FFF'],f:'Relaxed Fit',b:['heavy','obese']}]}};
+
+function pickOutfits(g,occ,bd,ag){
+  var pool=(DB[g]&&DB[g][occ])?DB[g][occ]:DB[g]['casual'];
+  var fl=fitLabel(bd);
+  var sc=pool.map(function(o){var s=0;if(!o.b||o.b.indexOf(bd)>-1)s+=4;if(!o.a||o.a.indexOf(ag)>-1)s+=2;if(o.f===fl)s+=3;return{o:o,s:s};});
+  sc.sort(function(a,b){return b.s-a.s;});
+  var r=[];for(var i=0;i<Math.min(4,sc.length);i++)r.push(sc[i].o);
+  return r;
+}
+
+/* ── CLAUDE AI ── */
+async function callAI(msgs,sys,max){
+  try{
+    var body={model:'claude-sonnet-4-20250514',max_tokens:max||200,messages:msgs};
+    if(sys)body.system=sys;
+    var res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    var d=await res.json();
+    return d.content&&d.content[0]?d.content[0].text:null;
+  }catch(e){return null;}
+}
+
+async function getAIAdvice(){
+  var rgb=toRgb(ST.hex),skin=skinType(brCalc(rgb.r,rgb.g,rgb.b)),bd=bodyType(ST.h,ST.w);
+  var p='You are a fashion stylist. Give 3 friendly sentences of style advice for: Gender='+ST.g+', Age='+ST.age+', Body type='+fitLabel(bd)+', Skin='+skin+', Occasion='+ST.occ+'. Mention specific colors that suit them.';
+  var advice=await callAI([{role:'user',content:p}],null,180);
+  var cleanAdvice=advice?parseText(advice):'Great choices! Focus on colors that complement your '+skin+' skin tone. Confidence is the best accessory for any '+ST.occ+' occasion!';
+  document.getElementById('aiText').innerHTML='<div class="ai-text">'+cleanAdvice+'</div>';
+}
+
+async function sendChatAI(msg){
+  var rgb=toRgb(ST.hex),skin=skinType(brCalc(rgb.r,rgb.g,rgb.b)),bd=bodyType(ST.h,ST.w);
+  var sys='You are ColorFit AI, a friendly fashion stylist. User: '+ST.g+', age '+ST.age+', '+fitLabel(bd)+', '+skin+' skin, '+ST.occ+'. Give short fashion advice in 2-3 sentences. Do NOT use markdown, asterisks or bold formatting. Write in plain conversational text only.';
+  chatHistory.push({role:'user',content:msg});
+  var reply=await callAI(chatHistory,sys,200);
+  if(!reply)reply='For your profile, choose colors that complement your '+skin+' skin and outfits that suit your '+fitLabel(bd)+' frame for '+ST.occ+'!';
+  chatHistory.push({role:'assistant',content:reply});
+  return reply;
+}
+
+// Parse markdown to HTML
+function parseText(text){
+  return text
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g,'<em>$1</em>')
+    .replace(/\n/g,'<br>');
+}
+
+function addMsg(text,who){
+  var div=document.createElement('div');
+  div.className='msg msg-'+who;
+  if(who==='ai')div.innerHTML='<div class="msg-name">ColorFit AI</div>'+parseText(text);
+  else div.textContent=text;
+  document.getElementById('chatBox').appendChild(div);
+  document.getElementById('chatBox').scrollTop=99999;
+}
+
+async function sendChat(){
+  var inp=document.getElementById('chatInp'),msg=inp.value.trim();
+  if(!msg)return;inp.value='';
+  addMsg(msg,'user');
+  var ld=document.createElement('div');ld.className='msg msg-ai';ld.id='cld';
+  ld.innerHTML='<div class="msg-name">ColorFit AI</div><div class="ai-loading"><div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div></div>';
+  document.getElementById('chatBox').appendChild(ld);
+  document.getElementById('chatBox').scrollTop=99999;
+  var reply=await sendChatAI(msg);
+  var el=document.getElementById('cld');
+  if(el)el.innerHTML='<div class="msg-name">ColorFit AI</div>'+parseText(reply);
+  document.getElementById('chatBox').scrollTop=99999;
+}
+
+/* ── GENERATE ── */
+function gen(){
+  var hexRaw=document.getElementById('iHex').value.trim()||'#D2A679';
+  var hv=hexRaw[0]==='#'?hexRaw:'#'+hexRaw;
+  if(hexRaw&&!vHex(hv)){document.getElementById('hexErr').style.display='block';return;}
+  document.getElementById('hexErr').style.display='none';
+  ST.age=parseInt(document.getElementById('iAge').value)||22;
+  ST.h=parseInt(document.getElementById('iH').value)||170;
+  ST.w=parseInt(document.getElementById('iW').value)||65;
+  ST.occ=document.getElementById('iOcc').value;ST.hex=hv;
+  document.getElementById('s1').classList.remove('on');
+  document.getElementById('ld').classList.add('on');
+  var msgs=['Analyzing with AI...','Detecting your style...','Matching colors...','Generating picks...'];
+  var i=0,lt=document.getElementById('lt');
+  var iv=setInterval(function(){i++;if(msgs[i])lt.textContent=msgs[i];},650);
+  setTimeout(function(){clearInterval(iv);document.getElementById('ld').classList.remove('on');renderAll();document.getElementById('s2').classList.add('on');},2800);
+}
+
+function renderAll(){
+  var g=ST.g,hex=ST.hex,occ=ST.occ;
+  var rgb=toRgb(hex),br=brCalc(rgb.r,rgb.g,rgb.b),sk=skinType(br);
+  var bd=bodyType(ST.h,ST.w),ag=ageGroup(ST.age),hg=heightGroup(ST.h);
+  var bmiv=bmi(ST.h,ST.w).toFixed(1);
+  setBg(hex);
+  document.getElementById('rT').textContent=g==='male'?'Male Style Profile':'Female Style Profile';
+  document.getElementById('rS').textContent=fitLabel(bd)+' · '+ag+' · BMI '+bmiv;
+  var SC={fair:{l:'Fair Skin',bg:'#FFF7ED',b:'#FED7AA',d:'#FBBF24',t:'#B45309'},medium:{l:'Medium Skin',bg:'#FEF3C7',b:'#FDE68A',d:'#D97706',t:'#92400E'},dark:{l:'Dark Skin',bg:'#FEF9C3',b:'#FDE047',d:'#8B4513',t:'#713F12'}};
+  var sc=SC[sk],bdg=document.getElementById('skinB');
+  bdg.style.cssText='background:'+sc.bg+';border-color:'+sc.b+';color:'+sc.t+';display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:50px;font-weight:600;font-size:12.5px;border:2px solid;margin-bottom:12px';
+  bdg.innerHTML='<span style="width:15px;height:15px;border-radius:50%;background:'+sc.d+';display:inline-block;border:2px solid rgba(0,0,0,.1)"></span>'+sc.l+' Detected';
+  // Profile tags with stagger
+  var tags=[{t:ST.h+'cm / '+ST.w+'kg'},{t:fitLabel(bd)},{t:ag+' ('+ST.age+'y)'},{t:hg},{t:'BMI '+bmiv}];
+  document.getElementById('pstrip').innerHTML=tags.map(function(x,i){return'<div class="ptag" style="animation-delay:'+(i*.05)+'s">'+x.t+'</div>';}).join('');
+  // Palette
+  var pal=PAL[sk],pg=document.getElementById('pGrid');
+  pg.innerHTML='';document.getElementById('cCnt').textContent=pal.best.length;
+  pal.best.forEach(function(c,i){
+    var d=document.createElement('div');d.className='swatch';d.style.cssText='background:'+c.h+';animation-delay:'+(i*.03)+'s';
+    d.innerHTML='<span class="stip">'+c.n+'</span>';pg.appendChild(d);
+  });
+  var av=document.getElementById('avRow');av.innerHTML='';
+  pal.avoid.forEach(function(c){var d=document.createElement('div');d.className='avchip';d.innerHTML='<span class="avdot" style="background:'+c.h+'"></span>'+c.n;av.appendChild(d);});
+  // Outfit title
+  document.getElementById('oTitle').innerHTML='Outfit Picks <span style="font-weight:500;font-size:11px;color:var(--soft)">'+fitLabel(bd)+'</span>';
+  // Outfits
+  var picks=pickOutfits(g,occ,bd,ag);
+  var og=document.getElementById('oGrid');og.innerHTML='';
+  picks.forEach(function(o,idx){
+    var url=IMG[o.i]||'';
+    var fclr=fitColor(o.f);
+    var cs=o.c.map(function(c){return'<div class="cseg" style="background:'+c+'"></div>';}).join('');
+    var cd=o.c.map(function(c){return'<div class="cdot" style="background:'+c+'"></div>';}).join('');
+    var card=document.createElement('div');card.className='ocard';
+    var sid='sh'+idx+'_'+Date.now();
+    var isMale=o.i.indexOf('m_')===0;
+    card.innerHTML=
+      '<div class="oimg">'
+        +'<div class="shimmer" id="'+sid+'"><div class="sh-ico">'+(isMale?'M':'F')+'</div><span>Loading...</span></div>'
+        +'<img src="'+url+'" alt="'+o.n+'" loading="lazy"'
+        +' onload="var e=document.getElementById(\''+sid+'\');if(e)e.style.display=\'none\';"'
+        +' onerror="var e=document.getElementById(\''+sid+'\');if(e){e.querySelector(\'.sh-ico\').textContent=\''+(isMale?'M':'F')+'\';e.querySelector(\'span\').textContent=\''+o.n+'\';};"'
+        +' style="position:relative;z-index:1"/>'
+        +'<div class="fbadge" style="background:'+fclr+'">'+o.f+'</div>'
+        +'<div class="cbar">'+cs+'</div>'
+      +'</div>'
+      +'<div class="oinfo"><h4>'+o.n+'</h4><p>'+o.d+'</p><div class="cdots">'+cd+'</div></div>';
+    og.appendChild(card);
+  });
+  // AI advice
+  getAIAdvice();
+  // Chat suggestions
+  var suggs=['What colors suit me?','Best outfit for '+occ+'?','Tips for '+fitLabel(bd),'What to avoid?'];
+  var sr=document.getElementById('suggRow');sr.innerHTML='';
+  suggs.forEach(function(s){var b=document.createElement('button');b.className='sugg';b.textContent=s;b.onclick=function(){document.getElementById('chatInp').value=s;sendChat();switchTab('chat');};sr.appendChild(b);});
+  chatHistory=[];
+}
+
+function reset(){
+  document.getElementById('s2').classList.remove('on');
+  document.getElementById('s1').classList.add('on');
+  document.getElementById('iHex').value='';
+  document.getElementById('hxp').style.background='#D2A679';
+  document.getElementById('hexErr').style.display='none';
+  document.getElementById('camBox').style.display='block';
+  document.getElementById('detCol').style.display='none';
+  document.getElementById('camArea').style.display='none';
+  document.querySelectorAll('.sc').forEach(function(s){s.classList.remove('active');});
+  stopCam();chatHistory=[];switchTab('outfit');
+  document.body.style.background='linear-gradient(135deg,#1e1b4b,#3730A3,#4F46E5,#7C3AED,#9333EA)';
+  document.body.style.backgroundSize='400% 400%';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function copyR(){
+  var skinT=document.getElementById('skinB').textContent.trim(),bd=bodyType(ST.h,ST.w);
+  var text='ColorFit AI - My Style\n\nSkin: '+skinT+'\nGender: '+ST.g+'\nOccasion: '+ST.occ+'\nFit: '+fitLabel(bd)+'\nBMI: '+bmi(ST.h,ST.w).toFixed(1)+'\n\nhttps://colourfitai.vercel.app';
+  navigator.clipboard.writeText(text).then(function(){var b=document.getElementById('cpyB');b.classList.add('ok');b.textContent='Copied!';showT('Results copied!');setTimeout(function(){b.classList.remove('ok');b.textContent='Copy';},2500);}).catch(function(){showT('Copy failed');});
+}
+function openShare(){
+  var url='https://colourfitai.vercel.app',e=encodeURIComponent,txt='Check out ColorFit AI - Smart AI Personal Stylist!';
+  document.getElementById('surl').value=url;
+  document.getElementById('waB').href='https://wa.me/?text='+e(txt+' '+url);
+  document.getElementById('twB').href='https://twitter.com/intent/tweet?text='+e(txt)+'&url='+e(url);
+  document.getElementById('tgB').href='https://t.me/share/url?url='+e(url)+'&text='+e(txt);
+  document.getElementById('sm').classList.add('on');
+}
+function closeShare(){document.getElementById('sm').classList.remove('on');}
+function cpLink(){navigator.clipboard.writeText(document.getElementById('surl').value).then(function(){showT('Link copied!');}).catch(function(){showT('Failed');});}
+function natShare(){if(navigator.share){navigator.share({title:'ColorFit AI',text:'Smart AI outfit picks!',url:'https://colourfitai.vercel.app'}).then(function(){closeShare();}).catch(function(){});}else cpLink();}
+function showT(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('on');setTimeout(function(){t.classList.remove('on');},2700);}
+
+// PWA
+if('serviceWorker'in navigator){var sc='self.addEventListener("fetch",function(e){e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request);}));});';navigator.serviceWorker.register(URL.createObjectURL(new Blob([sc],{type:'application/javascript'}))).catch(function(){});}
+var dp;window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();dp=e;var btn=document.createElement('button');btn.textContent='Install App';btn.style.cssText='position:fixed;bottom:72px;right:16px;background:linear-gradient(135deg,#4F46E5,#7C3AED);color:#fff;border:none;border-radius:50px;padding:11px 20px;font-family:DM Sans,sans-serif;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(79,70,229,.5);z-index:999;animation:pulse-glow 2s infinite';btn.onclick=function(){dp.prompt();dp.userChoice.then(function(r){if(r.outcome==='accepted')btn.remove();dp=null;});};document.body.appendChild(btn);});
+</script>
+</body>
+</html>
