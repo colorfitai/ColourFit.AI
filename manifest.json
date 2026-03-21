@@ -1,0 +1,65 @@
+{
+  "name": "ColorFit AI – Smart Personal Stylist",
+  "short_name": "ColorFit AI",
+  "description": "AI-powered personal stylist with camera skin detection, smart outfit picks, color palette and AI style chat.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0F0A2A",
+  "theme_color": "#4F46E5",
+  "lang": "en",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "ColorFit AI – Personal Stylist"
+    }
+  ],
+  "categories": ["lifestyle", "fashion", "personalization", "beauty"],
+  "shortcuts": [
+    {
+      "name": "Get My Style",
+      "short_name": "Style",
+      "description": "Get instant AI outfit suggestions",
+      "url": "/?action=style",
+      "icons": [{"src": "icon-192.png", "sizes": "192x192"}]
+    },
+    {
+      "name": "Privacy Policy",
+      "short_name": "Privacy",
+      "description": "View our privacy policy",
+      "url": "/privacy.html",
+      "icons": [{"src": "icon-192.png", "sizes": "192x192"}]
+    }
+  ],
+  "prefer_related_applications": false,
+  "related_applications": [],
+  "iarc_rating_id": "",
+  "share_target": {
+    "action": "/",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  }
+}
